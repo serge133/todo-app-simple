@@ -20,15 +20,18 @@ export default function Home() {
 
     for (let i = 0; i < taskFieldList.length; i++) {
       const word: string = taskFieldList[i];
+      // @ts-ignore
       if (!actionMap.has(word)) {
         strippedField.push(word);
         continue;
       }
       if (i === taskFieldList.length - 1) {
+        // @ts-ignore
         actionMap.set(word, "null");
         continue;
       }
       const action = taskFieldList[i + 1];
+      // @ts-ignore
       actionMap.set(word, action);
       i += 1;
     }
