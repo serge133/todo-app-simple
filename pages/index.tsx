@@ -3,17 +3,27 @@ import Navbar from "@/components/navbar";
 import Task from "@/models/task";
 import { useEffect, useState } from "react";
 import { randomCatchphrase } from "@/util";
+import { openDB, deleteDB, wrap, unwrap } from "idb";
+import {
+  fetchTasksDB,
+  initializeDB,
+  saveTaskDB,
+  updateTaskDB,
+} from "@/database";
+// import { writeDB } from "@/database";
 
 export default function Home() {
   const [taskField, setTaskField] = useState("");
   const [tasks, setTasks] = useState<Task[]>([]);
   // SETS RANDOM CATCH PHRASE
   const [catchphrase, setCatchphrase] = useState<string>("");
-  useEffect(() => {
-    setCatchphrase(randomCatchphrase);
-  }, [randomCatchphrase, setCatchphrase]);
+  useEffect(
+    () => setCatchphrase(randomCatchphrase),
+    [randomCatchphrase, setCatchphrase]
+  );
   // -----------------------------------------------
 
+  useEffect(() => initializeDB(), []);
   const parseTask = (s: string): [Map<any, any>, string] => {
     const actionMap = new Map([
       ["due", 0],
@@ -46,6 +56,30 @@ export default function Home() {
     return [actionMap, strippedField.join(" ").trim()];
   };
 
+  const reorderTasks = (ts: Task[]): Task[] => {
+    const newTasks = [...ts];
+    newTasks.sort((a, b) => {
+      if (a.order > b.order) {
+        return 1;
+      }
+
+      if (a.order < b.order) {
+        return -1;
+      }
+      return 0;
+    });
+    return newTasks;
+  };
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      let data = await fetchTasksDB();
+      data = reorderTasks(data);
+      setTasks(data);
+    };
+    fetchTasks().catch(console.log);
+  }, []);
+
   const submitTask = () => {
     const [actionMap, field] = parseTask(taskField);
 
@@ -57,13 +91,16 @@ export default function Home() {
       field,
       actionMap.get("priority") || actionMap.get("pr"),
       actionMap.get("due"),
-      actionMap.get("label") || actionMap.get("lb")
+      actionMap.get("label") || actionMap.get("lb"),
+      tasks.length
     );
 
     if (!newTask.isValidTask()) {
       console.log(newTask.getStatusMsg());
       return;
     }
+
+    saveTaskDB(newTask);
     setTasks([...tasks, newTask]);
     setTaskField("");
     console.log("Submitting task!!!!");
@@ -71,7 +108,10 @@ export default function Home() {
 
   const toggleComplete = (taskId: number) => {
     const newTasks = tasks.map((t) => {
-      if (t.id === taskId) t.toggleComplete();
+      if (t.id === taskId) {
+        t.complete = !t.complete;
+        updateTaskDB(t);
+      }
       return t;
     });
 
@@ -94,11 +134,17 @@ export default function Home() {
       return;
     }
     const newTasks = [...tasks];
+    // Swap the orders
+    newTasks[taskIndex].order = taskIndex - 1;
+    newTasks[taskIndex - 1].order = taskIndex;
+
     [newTasks[taskIndex - 1], newTasks[taskIndex]] = [
       newTasks[taskIndex],
       newTasks[taskIndex - 1],
     ];
 
+    updateTaskDB(newTasks[taskIndex]);
+    updateTaskDB(newTasks[taskIndex - 1]);
     setTasks(newTasks);
   };
 
@@ -109,13 +155,20 @@ export default function Home() {
       return;
     }
     const newTasks = [...tasks];
+    // Swap the orders
+    newTasks[taskIndex].order = taskIndex + 1;
+    newTasks[taskIndex + 1].order -= taskIndex;
+
     [newTasks[taskIndex + 1], newTasks[taskIndex]] = [
       newTasks[taskIndex],
       newTasks[taskIndex + 1],
     ];
 
+    updateTaskDB(newTasks[taskIndex]);
+    updateTaskDB(newTasks[taskIndex + 1]);
     setTasks(newTasks);
   };
+
   const TaskList = (
     <section className="grow overflow-y-auto pt-2">
       {tasks.map((t) => (
