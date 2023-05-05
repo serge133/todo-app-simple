@@ -177,7 +177,7 @@ export default function Home() {
   };
 
   const taskFilterPredicate = (task: Task) => {
-    if (labelFilter && task.label !== labelFilter) return false;
+    if (labelFilter && !task.label.includes(labelFilter)) return false;
     if (hideCompleteTasks && task.complete) return false;
     return true;
   };
