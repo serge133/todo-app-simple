@@ -4,7 +4,7 @@ type Props = {
   id: number;
   priority: number;
   title: string;
-  due: string | Date;
+  due: string;
   label: string;
   complete: boolean;
   toggleComplete: (taskId: number) => void;
@@ -13,15 +13,24 @@ type Props = {
   moveDown: (taskId: number) => void;
 };
 export default function TaskComponent(props: Props) {
-  const priorities = [
+  const priorities = ["bg-black", "bg-blue-500", "bg-amber-500", "bg-red-800"];
+  const priorities_border = [
     "border-white",
     "border-blue-500",
     "border-amber-500",
     "border-red-800",
   ];
 
-  const Tag = ({ name, children }: { name: string; children: string }) => (
-    <span className="bg-slate-500 white rounded-md p-1 mr-2">
+  const Tag = ({
+    name,
+    children,
+    bg,
+  }: {
+    name: string;
+    children: string;
+    bg: string;
+  }) => (
+    <span className={`${bg} white rounded-md p-1 mr-2 text-xs`}>
       {name}: {children}
     </span>
   );
@@ -29,8 +38,8 @@ export default function TaskComponent(props: Props) {
   return (
     <div
       className={[
-        "border-2 p-2 rounded-lg mb-3",
-        props.complete ? "border-gray-500" : priorities[props.priority],
+        "border-2 p-2 rounded-lg mb-3 relative",
+        props.complete ? "border-gray-500" : priorities_border[props.priority],
       ].join(" ")}
       key={props.id}
     >
@@ -41,7 +50,7 @@ export default function TaskComponent(props: Props) {
             onClick={() => props.toggleComplete(props.id)}
           />
           <div
-            className=" font-bold text-red-500 hover:text-red-600 cursor-pointer"
+            className="hover:text-red-600 cursor-pointer absolute right-1 top-0"
             onClick={() => props.deleteTask(props.id)}
           >
             DELETE
@@ -63,9 +72,21 @@ export default function TaskComponent(props: Props) {
           {props.title}
         </p>
         <section className={props.complete ? "opacity-25" : ""}>
-          <Tag name="due">{props.due.toLocaleString()}</Tag>
-          <Tag name="priority">{props.priority.toString()}</Tag>
-          <Tag name="label">{props.label.toString()}</Tag>
+          <Tag
+            name="due"
+            bg={props.due === "never" ? "bg-slate-500" : "bg-amber-500"}
+          >
+            {props.due}
+          </Tag>
+          <Tag
+            name="label"
+            bg={props.label === "none" ? "bg-slate-500" : "bg-red-500"}
+          >
+            {props.label.toString()}
+          </Tag>
+          <Tag name="priority" bg={priorities[props.priority]}>
+            {props.priority.toString()}
+          </Tag>
         </section>
       </div>
     </div>

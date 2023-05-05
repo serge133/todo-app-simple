@@ -1,4 +1,4 @@
-import { openDB, deleteDB, wrap, unwrap } from "idb";
+import { openDB, deleteDB, wrap, unwrap, IDBPDatabase } from "idb";
 import Task from "@/models/task";
 
 // INITIALIZES DATABASE FOR COMPUTER
@@ -10,9 +10,15 @@ export function initializeDB() {
   });
 }
 
+export async function deleteTaskDB(taskID: number) {
+  const db1 = await openDB("task-db", 1);
+  db1.delete("task", taskID).then(console.log).catch(console.log);
+  db1.close();
+}
 export async function updateTaskDB(task: Task) {
   const db1 = await openDB("task-db", 1);
   db1.put("task", task);
+  db1.close();
 }
 
 export async function fetchTasksDB(): Promise<Task[]> {

@@ -4,7 +4,8 @@ export default class Task {
   id: number;
   title: string;
   priority: number;
-  due: string | Date = "never";
+  due: string = "never";
+  dueMS: number = -1;
   label: string;
   complete: boolean = false;
   order: number;
@@ -56,27 +57,36 @@ export default class Task {
         unit = due.slice(3, due.length);
       }
 
+      let temp: Date;
       switch (unit) {
         case "w":
         case "week":
         case "weeks":
-          this.due = future(num, 0, 0, 0);
+          temp = future(num, 0, 0, 0);
+          this.dueMS = +temp;
+          this.due = temp.toLocaleString();
           return;
         case "d":
         case "day":
         case "days":
-          this.due = future(0, num, 0, 0);
+          temp = future(0, num, 0, 0);
+          this.dueMS = +temp;
+          this.due = temp.toLocaleString();
           return;
         case "h":
         case "hour":
         case "hours":
-          this.due = future(0, 0, num, 0);
+          temp = future(0, 0, num, 0);
+          this.dueMS = +temp;
+          this.due = temp.toLocaleString();
           return;
         case "m":
         case "min":
         case "mins":
         case "minutes":
-          this.due = future(0, 0, 0, num);
+          temp = future(0, 0, 0, num);
+          this.dueMS = +temp;
+          this.due = temp.toLocaleString();
           return;
         default:
           this._valid = false;
@@ -84,17 +94,24 @@ export default class Task {
           return;
       }
     }
+    let temp: Date;
     switch (due) {
       case "now":
-        this.due = new Date();
+        temp = new Date();
+        this.dueMS = +temp;
+        this.due = temp.toLocaleString();
         break;
       case "tomorrow":
       case "tom":
-        this.due = future(0, 1, 0, 0);
+        temp = future(0, 1, 0, 0);
+        this.dueMS = +temp;
+        this.due = temp.toLocaleString();
         break;
 
       case "tonight":
-        this.due = new Date(new Date().setHours(23, 59, 0, 0));
+        temp = new Date(new Date().setHours(23, 59, 0, 0));
+        this.dueMS = +temp;
+        this.due = temp.toLocaleString();
         break;
 
       // Happens when invalid date was supplied

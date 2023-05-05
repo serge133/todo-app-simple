@@ -1,10 +1,10 @@
 import TaskComponent from "@/components/Task";
 import Navbar from "@/components/navbar";
 import Task from "@/models/task";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { randomCatchphrase } from "@/util";
-import { openDB, deleteDB, wrap, unwrap } from "idb";
 import {
+  deleteTaskDB,
   fetchTasksDB,
   initializeDB,
   saveTaskDB,
@@ -18,7 +18,7 @@ export default function Home() {
   // SETS RANDOM CATCH PHRASE
   const [catchphrase, setCatchphrase] = useState<string>("");
   useEffect(
-    () => setCatchphrase(randomCatchphrase),
+    () => setCatchphrase(randomCatchphrase()),
     [randomCatchphrase, setCatchphrase]
   );
   // -----------------------------------------------
@@ -124,6 +124,7 @@ export default function Home() {
       return t;
     });
 
+    deleteTaskDB(taskId);
     setTasks(newTasks);
   };
 
@@ -157,7 +158,7 @@ export default function Home() {
     const newTasks = [...tasks];
     // Swap the orders
     newTasks[taskIndex].order = taskIndex + 1;
-    newTasks[taskIndex + 1].order -= taskIndex;
+    newTasks[taskIndex + 1].order = taskIndex;
 
     [newTasks[taskIndex + 1], newTasks[taskIndex]] = [
       newTasks[taskIndex],
@@ -191,12 +192,15 @@ export default function Home() {
   );
 
   return (
-    <main className="flex h-screen w-screen flex-col items-center justify-between px-5 pd-5 pt-10">
-      <Navbar currPage="HOME" />
-      <div className="flex flex-col p-3 w-full h-full border-white border-2 bg-black rounded-lg">
+    <main className="flex h-screen w-screen flex-col items-center justify-between px-2 pd-2 pt-10">
+      <Navbar
+        currPage="HOME"
+        numTasks={tasks.filter((x) => !x.complete).length}
+      />
+      <div className="flex flex-col p-2 w-full h-full border-white bg-black rounded-lg border overflow-hidden">
         <input
-          className="rounded-lg bg-inherit border-2 px-5 py-2.5 focus:outline-none"
-          placeholder="..."
+          className="rounded-lg bg-inherit border px-5 py-2.5 focus:outline-none"
+          placeholder="Workout due +4days priority 3 label sports"
           onChange={(e) => setTaskField(e.target.value)}
           value={taskField}
           onKeyDown={(e) => {

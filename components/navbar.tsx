@@ -1,6 +1,7 @@
 import Link from "next/link";
 type Props = {
   currPage: string;
+  numTasks?: number;
 };
 
 export default function Navbar(props: Props) {
@@ -25,6 +26,14 @@ export default function Navbar(props: Props) {
           </Link>
         </div>
       ))}
+      {props.numTasks ? (
+        <h3 className="italic inline ml-5">
+          You have <span className="text-red-500">{props.numTasks}</span>{" "}
+          task(s) due
+        </h3>
+      ) : (
+        <h3 className="italic inline ml-5">You have no tasks</h3>
+      )}
     </div>
   );
 }
