@@ -41,19 +41,19 @@ export default function TaskComponent(props: Props) {
             onClick={() => props.toggleComplete(props.id)}
           />
           <div
-            className="font-thin hover:text-red-500 cursor-pointer"
+            className=" font-bold text-red-500 hover:text-red-600 cursor-pointer"
             onClick={() => props.deleteTask(props.id)}
           >
             DELETE
           </div>
           <div
-            className="font-thin hover:text-red-500 cursor-pointer"
+            className="hover:text-red-500 cursor-pointer"
             onClick={() => props.moveUp(props.id)}
           >
             UP
           </div>
           <div
-            className="font-thin hover:text-red-500 cursor-pointer"
+            className="hover:text-red-500 cursor-pointer"
             onClick={() => props.moveDown(props.id)}
           >
             DOWN

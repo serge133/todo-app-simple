@@ -4,7 +4,7 @@ export default class Task {
   id: number;
   title: string;
   priority: number;
-  due: string | Date;
+  due: string | Date = "never";
   label: string;
   complete: boolean = false;
 
@@ -12,8 +12,8 @@ export default class Task {
   private _statusMsg: string = "";
 
   constructor(
-    title: string = "Unnamed",
-    priority: number = 0,
+    title: string,
+    priority: number,
     due: string | 0,
     label: string | 0
   ) {
@@ -28,24 +28,70 @@ export default class Task {
       this.priority = 0;
     }
 
+    this.parseDueDate(due);
+    this.label = label ? label.toString() : "none";
+  }
+
+  private parseDueDate(due: string | 0) {
+    if (due === 0) return;
+
+    if (due[0] === "+") {
+      if (isNaN(+due[1])) {
+        this._valid = false;
+        this._statusMsg = "Invalid dynamic date";
+        return;
+      }
+      let num: number;
+      let unit: string;
+
+      // allows for +3days or +30days
+      if (isNaN(+due[2])) {
+        num = +due[1];
+        unit = due.slice(2, due.length);
+      } else {
+        num = +due.slice(1, 3);
+        unit = due.slice(3, due.length);
+      }
+
+      switch (unit) {
+        case "w":
+        case "weeks":
+          this.due = future(num, 0, 0, 0);
+          return;
+        case "d":
+        case "days":
+          this.due = future(0, num, 0, 0);
+          return;
+        case "h":
+        case "hours":
+          this.due = future(0, 0, num, 0);
+          return;
+        case "m":
+        case "minutes":
+          this.due = future(0, 0, 0, num);
+          return;
+        default:
+          this._valid = false;
+          this._statusMsg = "Invalid dynamic date";
+          return;
+      }
+    }
     switch (due) {
       case "now":
         this.due = new Date();
         break;
       case "tomorrow":
       case "tom":
-        this.due = future(1);
+        this.due = future(0, 1, 0, 0);
         break;
-      case 0:
-        this.due = "never";
-        break;
+
+      // Happens when invalid date was supplied
       default:
         this._valid = false;
         this._statusMsg = "Invalid Date";
         this.due = due;
+        return;
     }
-
-    this.label = label ? label.toString() : "none";
   }
 
   isValidTask(): boolean {

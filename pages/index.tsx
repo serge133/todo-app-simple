@@ -1,11 +1,18 @@
 import TaskComponent from "@/components/Task";
 import Navbar from "@/components/navbar";
 import Task from "@/models/task";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { randomCatchphrase } from "@/util";
 
 export default function Home() {
   const [taskField, setTaskField] = useState("");
   const [tasks, setTasks] = useState<Task[]>([]);
+  // SETS RANDOM CATCH PHRASE
+  const [catchphrase, setCatchphrase] = useState<string>("");
+  useEffect(() => {
+    setCatchphrase(randomCatchphrase);
+  }, [randomCatchphrase, setCatchphrase]);
+  // -----------------------------------------------
 
   const parseTask = (s: string): [Map<any, any>, string] => {
     const actionMap = new Map([
@@ -126,6 +133,7 @@ export default function Home() {
           moveDown={moveDown}
         />
       ))}
+      {tasks.length === 0 && <p className="italic">{catchphrase}</p>}
     </section>
   );
 
