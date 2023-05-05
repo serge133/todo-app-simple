@@ -90,6 +90,10 @@ export default class Task {
         this.due = future(0, 1, 0, 0);
         break;
 
+      case "tonight":
+        this.due = new Date(new Date().setHours(23, 59, 0, 0));
+        break;
+
       // Happens when invalid date was supplied
       default:
         this._valid = false;
