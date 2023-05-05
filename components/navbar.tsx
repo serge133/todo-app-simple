@@ -28,11 +28,10 @@ export default function Navbar(props: Props) {
       ))}
       {props.numTasks ? (
         <h3 className="italic inline ml-5">
-          You have <span className="text-red-500">{props.numTasks}</span>{" "}
-          task(s) due
+          <span className="text-red-500">{props.numTasks}</span> task(s) due
         </h3>
       ) : (
-        <h3 className="italic inline ml-5">You have no tasks</h3>
+        <h3 className="italic inline ml-5">No Tasks</h3>
       )}
     </div>
   );
