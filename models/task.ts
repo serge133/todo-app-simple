@@ -55,18 +55,23 @@ export default class Task {
 
       switch (unit) {
         case "w":
+        case "week":
         case "weeks":
           this.due = future(num, 0, 0, 0);
           return;
         case "d":
+        case "day":
         case "days":
           this.due = future(0, num, 0, 0);
           return;
         case "h":
+        case "hour":
         case "hours":
           this.due = future(0, 0, num, 0);
           return;
         case "m":
+        case "min":
+        case "mins":
         case "minutes":
           this.due = future(0, 0, 0, num);
           return;
