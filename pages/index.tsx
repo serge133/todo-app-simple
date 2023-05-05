@@ -1,7 +1,7 @@
 import TaskComponent from "@/components/Task";
 import Navbar from "@/components/navbar";
 import Task from "@/models/task";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { randomCatchphrase } from "@/util";
 import {
   deleteTaskDB,
@@ -10,11 +10,17 @@ import {
   saveTaskDB,
   updateTaskDB,
 } from "@/database";
+import ListController from "@/components/list_controller";
 // import { writeDB } from "@/database";
 
 export default function Home() {
   const [taskField, setTaskField] = useState("");
   const [tasks, setTasks] = useState<Task[]>([]);
+  // TASK FILTERS
+  const [labelFilter, setLabelFilter] = useState<string>("");
+  const [hideCompleteTasks, setHideCompleteTasks] = useState(true);
+  // ---------------------------
+
   // SETS RANDOM CATCH PHRASE
   const [catchphrase, setCatchphrase] = useState<string>("");
   useEffect(
@@ -170,9 +176,15 @@ export default function Home() {
     setTasks(newTasks);
   };
 
+  const taskFilterPredicate = (task: Task) => {
+    if (labelFilter && task.label !== labelFilter) return false;
+    if (hideCompleteTasks && task.complete) return false;
+    return true;
+  };
+
   const TaskList = (
     <section className="grow overflow-y-auto pt-2">
-      {tasks.map((t) => (
+      {tasks.filter(taskFilterPredicate).map((t) => (
         <TaskComponent
           key={t.id}
           id={t.id}
@@ -206,6 +218,12 @@ export default function Home() {
           onKeyDown={(e) => {
             if (e.key === "Enter") submitTask();
           }}
+        />
+        <ListController
+          labelFilterVal={labelFilter}
+          onChangeLabel={setLabelFilter}
+          hideComplete={hideCompleteTasks}
+          setHideComplete={setHideCompleteTasks}
         />
         {TaskList}
       </div>
