@@ -98,7 +98,8 @@ export default function Home() {
       actionMap.get("priority") || actionMap.get("pr"),
       actionMap.get("due"),
       actionMap.get("label") || actionMap.get("lb"),
-      tasks.length
+      tasks.length,
+      taskField
     );
 
     if (!newTask.isValidTask()) {
@@ -176,8 +177,17 @@ export default function Home() {
     setTasks(newTasks);
   };
 
+  const editTask = (taskId: number, originalText: string) => {
+    setTaskField(originalText);
+    deleteTask(taskId);
+  };
+
   const taskFilterPredicate = (task: Task) => {
-    if (labelFilter && !task.label.includes(labelFilter)) return false;
+    if (
+      labelFilter &&
+      !task.label.toLowerCase().includes(labelFilter.toLowerCase())
+    )
+      return false;
     if (hideCompleteTasks && task.complete) return false;
     return true;
   };
@@ -197,6 +207,8 @@ export default function Home() {
           deleteTask={deleteTask}
           moveUp={moveUp}
           moveDown={moveDown}
+          editTask={editTask}
+          originalText={t.originalText}
         />
       ))}
       {tasks.length === 0 && <p className="italic">{catchphrase}</p>}

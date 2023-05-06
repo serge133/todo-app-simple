@@ -1,3 +1,5 @@
+import { ChangeEvent } from "react";
+
 type Props = {
   onChangeLabel: (label: string) => void;
   labelFilterVal: string;
@@ -7,22 +9,24 @@ type Props = {
 
 export default function ListController(props: Props) {
   const toggleShowComplete = () => props.setHideComplete(!props.hideComplete);
+
+  const handleLabelChange = (e: ChangeEvent<HTMLInputElement>) => {
+    props.onChangeLabel(e.target.value);
+  };
   return (
     <section className="rounded-lg bg-inherit border px-5 py-2.5 focus:outline-none mt-2 flex flex-row justify-start items-center gap-2">
       <div
         onClick={toggleShowComplete}
-        className={`cursor-pointer rounded-lg px-3 py-2 text-xs ${
-          props.hideComplete ? "bg-red-500 " : ""
-        }`}
+        className="cursor-pointer font-bold rounded-lg px-3 py-2 text-sm bg-red-500 hover:bg-red-600"
       >
-        Hide Complete
+        {props.hideComplete ? "Show Complete" : "Hide Complete"}
       </div>
-      <div className="flex flex-row gap-2 w-28">
-        <p>Label: </p>{" "}
+      <div className="flex flex-row gap-2 w-32 bg-red-500 px-3 py-2 rounded-lg text-sm font-bold">
+        <p className="">Label: </p>{" "}
         <input
-          onChange={(e) => props.onChangeLabel(e.target.value)}
+          onChange={handleLabelChange}
           value={props.labelFilterVal}
-          className="bg-black grow w-full border-b outline-none text-center"
+          className=" bg-transparent placeholder:text-white text-white grow w-full border-b outline-none text-center"
           placeholder="Any"
         />
       </div>

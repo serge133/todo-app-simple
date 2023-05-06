@@ -9,6 +9,7 @@ export default class Task {
   label: string;
   complete: boolean = false;
   order: number;
+  originalText: string;
 
   private _valid: boolean = true;
   private _statusMsg: string = "";
@@ -18,11 +19,13 @@ export default class Task {
     priority: number,
     due: string | 0,
     label: string | 0,
-    order: number
+    order: number,
+    originalText: string
   ) {
     this.id = +new Date();
     this.title = title;
     this.order = order;
+    this.originalText = originalText;
 
     if (!isNaN(+priority)) {
       this.priority = Math.min(+priority, 3);

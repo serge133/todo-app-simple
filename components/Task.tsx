@@ -11,6 +11,8 @@ type Props = {
   deleteTask: (taskId: number) => void;
   moveUp: (taskId: number) => void;
   moveDown: (taskId: number) => void;
+  editTask: (taskId: number, originalText: string) => void;
+  originalText: string;
 };
 export default function TaskComponent(props: Props) {
   const priorities = ["bg-black", "bg-blue-500", "bg-amber-500", "bg-red-800"];
@@ -35,6 +37,12 @@ export default function TaskComponent(props: Props) {
     </span>
   );
 
+  const handleEdit = () => props.editTask(props.id, props.originalText);
+  const handleComplete = () => props.toggleComplete(props.id);
+  const handleDelete = () => props.deleteTask(props.id);
+  const handleUP = () => props.moveUp(props.id);
+  const handleDown = () => props.moveDown(props.id);
+
   return (
     <div
       className={[
@@ -45,25 +53,27 @@ export default function TaskComponent(props: Props) {
     >
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2">
-          <CheckBox
-            checked={props.complete}
-            onClick={() => props.toggleComplete(props.id)}
-          />
-          <div
-            className="hover:text-red-600 cursor-pointer absolute right-1 top-0"
-            onClick={() => props.deleteTask(props.id)}
-          >
-            DELETE
-          </div>
-          <div
-            className="hover:text-red-500 cursor-pointer"
-            onClick={() => props.moveUp(props.id)}
-          >
+          <CheckBox checked={props.complete} onClick={handleComplete} />
+          <section className=" absolute right-1 top-0">
+            <div
+              onClick={handleEdit}
+              className="inline mr-2 hover:text-red-500 cursor-pointer"
+            >
+              EDIT
+            </div>
+            <div
+              className="hover:text-red-600 cursor-pointer inline"
+              onClick={handleDelete}
+            >
+              DELETE
+            </div>
+          </section>
+          <div className="hover:text-red-500 cursor-pointer" onClick={handleUP}>
             UP
           </div>
           <div
             className="hover:text-red-500 cursor-pointer"
-            onClick={() => props.moveDown(props.id)}
+            onClick={handleDown}
           >
             DOWN
           </div>
