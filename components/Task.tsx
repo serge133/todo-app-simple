@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import CheckBox from "./checkbox";
 
 type Props = {
@@ -15,7 +16,7 @@ type Props = {
   originalText: string;
 };
 export default function TaskComponent(props: Props) {
-  const priorities = ["bg-black", "bg-blue-500", "bg-amber-500", "bg-red-800"];
+  const priorities = ["bg-white", "bg-blue-500", "bg-amber-500", "bg-red-500"];
   const priorities_border = [
     "border-white",
     "border-blue-500",
@@ -26,14 +27,15 @@ export default function TaskComponent(props: Props) {
   const Tag = ({
     name,
     children,
-    bg,
+    className,
   }: {
-    name: string;
-    children: string;
-    bg: string;
+    name?: string;
+    children: string | ReactNode;
+    className?: string;
   }) => (
-    <span className={`${bg} white rounded-md p-1 mr-2 text-xs`}>
-      {name}: {children}
+    <span className={`${className} rounded-md p-1 mr-2 text-sm`}>
+      {name && `${name}: `}
+      {children}
     </span>
   );
 
@@ -82,20 +84,16 @@ export default function TaskComponent(props: Props) {
           {props.title}
         </p>
         <section className={props.complete ? "opacity-25" : ""}>
-          <Tag
-            name="due"
-            bg={props.due === "never" ? "bg-slate-500" : "bg-amber-500"}
-          >
+          <Tag className={`${priorities[props.priority]} text-black font-bold`}>
+            ㅤㅤㅤㅤㅤㅤㅤ
+          </Tag>
+          <Tag name="due" className="bg-transparent">
             {props.due}
           </Tag>
-          <Tag
-            name="label"
-            bg={props.label === "none" ? "bg-slate-500" : "bg-red-500"}
-          >
-            {props.label.toString()}
-          </Tag>
-          <Tag name="priority" bg={priorities[props.priority]}>
-            {props.priority.toString()}
+          <Tag name="label">
+            <span className="text-red-500 font-bold">
+              {props.label.toString()}
+            </span>
           </Tag>
         </section>
       </div>
