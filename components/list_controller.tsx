@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, ReactNode } from "react";
 
 type Props = {
   onChangeLabel: (label: string) => void;
@@ -21,28 +21,33 @@ export default function ListController(props: Props) {
   };
 
   return (
-    <section className="rounded-lg bg-inherit border px-5 py-2.5 focus:outline-none mt-2 flex flex-row justify-start items-center gap-2">
+    <section className="rounded-lg border px-5 focus:outline-none mt-2 flex flex-row justify-start items-center gap-5">
       <div
         onClick={toggleShowComplete}
-        className="cursor-pointer font-bold rounded-lg px-3 py-2 text-sm bg-red-500 hover:bg-red-600"
+        className="cursor-pointer rounded-lg py-2 text-sm text-white underline underline-offset-4 hover:text-red-500"
       >
         {props.hideComplete ? "Show Complete" : "Hide Complete"}
       </div>
-      <div className="flex flex-row gap-2 w-32 bg-red-500 px-3 py-2 rounded-lg text-sm font-bold">
+      {/* <div className="flex flex-row gap-2 w-32 text-red-500 px-3 py-2 rounded-lg text-sm font-bold">
         <p className="">Label: </p>{" "}
-        <input
-          onChange={handleLabelChange}
-          value={props.labelFilterVal}
-          className=" bg-transparent placeholder:text-white text-white grow w-full border-b outline-none text-center"
-          placeholder="Any"
-        />
-      </div>
+      </div> */}
       <div
         onClick={toggleFilter}
-        className="cursor-pointer font-bold rounded-lg px-3 py-2 text-sm bg-red-500 hover:bg-red-600"
+        className="cursor-pointer rounded-lg py-2 text-sm text-white hover:text-red-500 underline-offset-4 underline"
       >
-        Sort By: {props.sortBy === "custom" ? "Custom" : "Due Date"}
+        {props.sortBy === "custom" ? "By Due Date" : "Custom Sorting"}
       </div>
+      {/* {props.sortBy !== "custom" && (
+        <p className=" text-xs italic text-gray-800">
+          *Up Down Movement Disabled
+        </p>
+      )} */}
+      <input
+        onChange={handleLabelChange}
+        value={props.labelFilterVal}
+        className="bg-transparent text-red-500 w-14 text-sm underline underline-offset-4 outline-none text-center "
+        placeholder="label"
+      />
     </section>
   );
 }

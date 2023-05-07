@@ -14,6 +14,7 @@ type Props = {
   moveDown: (taskId: number) => void;
   editTask: (taskId: number, originalText: string) => void;
   originalText: string;
+  disableUpDownControl: boolean;
 };
 export default function TaskComponent(props: Props) {
   const priorities = ["bg-white", "bg-blue-500", "bg-amber-500", "bg-red-500"];
@@ -42,8 +43,14 @@ export default function TaskComponent(props: Props) {
   const handleEdit = () => props.editTask(props.id, props.originalText);
   const handleComplete = () => props.toggleComplete(props.id);
   const handleDelete = () => props.deleteTask(props.id);
-  const handleUP = () => props.moveUp(props.id);
-  const handleDown = () => props.moveDown(props.id);
+  const handleUP = () => {
+    if (props.disableUpDownControl) return;
+    props.moveUp(props.id);
+  };
+  const handleDown = () => {
+    if (props.disableUpDownControl) return;
+    props.moveDown(props.id);
+  };
 
   return (
     <div
@@ -70,15 +77,22 @@ export default function TaskComponent(props: Props) {
               DELETE
             </div>
           </section>
-          <div className="hover:text-red-500 cursor-pointer" onClick={handleUP}>
-            UP
-          </div>
-          <div
-            className="hover:text-red-500 cursor-pointer"
-            onClick={handleDown}
-          >
-            DOWN
-          </div>
+          {!props.disableUpDownControl && (
+            <>
+              <div
+                className="hover:text-red-500 cursor-pointer"
+                onClick={handleUP}
+              >
+                UP
+              </div>
+              <div
+                className="hover:text-red-500 cursor-pointer"
+                onClick={handleDown}
+              >
+                DOWN
+              </div>
+            </>
+          )}
         </div>
         <p className={props.complete ? "line-through text-gray-500" : ""}>
           {props.title}

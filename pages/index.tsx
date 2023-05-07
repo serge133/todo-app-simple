@@ -237,6 +237,7 @@ export default function Home() {
           moveDown={moveDown}
           editTask={editTask}
           originalText={t.originalText}
+          disableUpDownControl={sortByFilter !== "custom"}
         />
       ))}
       {tasks.length === 0 && <p className="italic">{catchphrase}</p>}
