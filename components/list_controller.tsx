@@ -11,7 +11,11 @@ type Props = {
 };
 
 export default function ListController(props: Props) {
-  const toggleShowComplete = () => props.setHideComplete(!props.hideComplete);
+  const toggleShowComplete = () => {
+    const newVal: boolean = !props.hideComplete;
+    localStorage.setItem("listControllerHideComplete", newVal.toString());
+    props.setHideComplete(newVal);
+  };
   const toggleFilter = () => {
     if (props.sortBy === "custom") props.reorder("duedate");
     else props.reorder("custom");

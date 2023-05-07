@@ -17,7 +17,10 @@ export async function deleteTaskDB(taskID: number) {
 }
 export async function updateTaskDB(task: Task) {
   const db1 = await openDB("task-db", 1);
-  db1.put("task", task);
+  db1
+    .put("task", task)
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));
   db1.close();
 }
 
@@ -34,10 +37,6 @@ export async function saveTaskDB(newTask: Task) {
     .add("task", newTask)
     .then((result) => console.log("Success!", result))
     .catch((err) => console.log("an error: ", err));
-  //   db1
-  //     .add("todo", true, "delivered")
-  //     .then((result) => console.log("Success!", result))
-  //     .catch((err) => console.log("an error: ", err));
 
   db1.close();
 }

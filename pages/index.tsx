@@ -62,7 +62,17 @@ export default function Home() {
   );
   // -----------------------------------------------
 
-  useEffect(() => initializeDB(), []);
+  useEffect(() => {
+    // set defaults on list controller
+    const listControllerComplete: string | null = localStorage.getItem(
+      "listControllerHideComplete"
+    );
+    setHideCompleteTasks(
+      listControllerComplete === "true" || !listControllerComplete
+    );
+    // -----------------
+    initializeDB();
+  }, []);
   const parseTask = (s: string): [Map<any, any>, string] => {
     const actionMap = new Map([
       ["due", 0],
