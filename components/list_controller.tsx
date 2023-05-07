@@ -1,4 +1,5 @@
-import { ChangeEvent, ReactNode } from "react";
+import { TaskOrdering } from "@/types";
+import { ChangeEvent } from "react";
 
 type Props = {
   onChangeLabel: (label: string) => void;
@@ -6,14 +7,14 @@ type Props = {
   hideComplete: boolean;
   setHideComplete: (val: boolean) => void;
   sortBy: "custom" | "duedate";
-  setSortByFilter: (val: "custom" | "duedate") => void;
+  reorder: (ordering: TaskOrdering) => void;
 };
 
 export default function ListController(props: Props) {
   const toggleShowComplete = () => props.setHideComplete(!props.hideComplete);
   const toggleFilter = () => {
-    if (props.sortBy === "custom") props.setSortByFilter("duedate");
-    else props.setSortByFilter("custom");
+    if (props.sortBy === "custom") props.reorder("duedate");
+    else props.reorder("custom");
   };
 
   const handleLabelChange = (e: ChangeEvent<HTMLInputElement>) => {

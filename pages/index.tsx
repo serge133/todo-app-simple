@@ -11,7 +11,39 @@ import {
   updateTaskDB,
 } from "@/database";
 import ListController from "@/components/list_controller";
+import { TaskOrdering } from "@/types";
 // import { writeDB } from "@/database";
+
+// Creates copy not in place
+const reorderTasksCustom = (ts: Task[]): Task[] => {
+  const newTasks = [...ts];
+  newTasks.sort((a, b) => {
+    if (a.order > b.order) {
+      return 1;
+    }
+
+    if (a.order < b.order) {
+      return -1;
+    }
+    return 0;
+  });
+  return newTasks;
+};
+// Creates copy not in place
+const reorderTasksDueDate = (ts: Task[]): Task[] => {
+  const newTasks = [...ts];
+  newTasks.sort((a, b) => {
+    if (a.dueMS > b.dueMS) {
+      return 1;
+    }
+
+    if (a.dueMS < b.dueMS) {
+      return -1;
+    }
+    return 0;
+  });
+  return newTasks;
+};
 
 export default function Home() {
   const [taskField, setTaskField] = useState("");
@@ -19,9 +51,7 @@ export default function Home() {
   // TASK FILTERS
   const [labelFilter, setLabelFilter] = useState<string>("");
   const [hideCompleteTasks, setHideCompleteTasks] = useState(true);
-  const [sortByFilter, setSortByFilter] = useState<"custom" | "duedate">(
-    "custom"
-  );
+  const [sortByFilter, setSortByFilter] = useState<TaskOrdering>("custom");
   // ---------------------------
 
   // SETS RANDOM CATCH PHRASE
@@ -65,38 +95,6 @@ export default function Home() {
     return [actionMap, strippedField.join(" ").trim()];
   };
 
-  // Creates copy not in place
-  const reorderTasksCustom = (ts: Task[]): Task[] => {
-    const newTasks = [...ts];
-    newTasks.sort((a, b) => {
-      if (a.order > b.order) {
-        return 1;
-      }
-
-      if (a.order < b.order) {
-        return -1;
-      }
-      return 0;
-    });
-    return newTasks;
-  };
-
-  // Creates copy not in place
-  const reorderTasksDueDate = (ts: Task[]): Task[] => {
-    const newTasks = [...ts];
-    newTasks.sort((a, b) => {
-      if (a.dueMS > b.dueMS) {
-        return 1;
-      }
-
-      if (a.dueMS < b.dueMS) {
-        return -1;
-      }
-      return 0;
-    });
-    return newTasks;
-  };
-
   useEffect(() => {
     const fetchTasks = async () => {
       let data = await fetchTasksDB();
@@ -106,13 +104,12 @@ export default function Home() {
     fetchTasks().catch(console.log);
   }, []);
 
-  useEffect(() => {
-    if (sortByFilter === "custom") {
-      setTasks(reorderTasksCustom(tasks));
-    } else if (sortByFilter === "duedate") {
-      setTasks(reorderTasksDueDate(tasks));
-    }
-  }, [sortByFilter]);
+  const reorderTasks = (ordering: TaskOrdering) => {
+    if (ordering === "custom") setTasks((prev) => reorderTasksCustom(prev));
+    else if (ordering === "duedate")
+      setTasks((prev) => reorderTasksDueDate(prev));
+    setSortByFilter(ordering);
+  };
 
   const submitTask = () => {
     const [actionMap, field] = parseTask(taskField);
@@ -268,12 +265,12 @@ export default function Home() {
           }}
         />
         <ListController
-          setSortByFilter={setSortByFilter}
           labelFilterVal={labelFilter}
           onChangeLabel={setLabelFilter}
           hideComplete={hideCompleteTasks}
           setHideComplete={setHideCompleteTasks}
           sortBy={sortByFilter}
+          reorder={reorderTasks}
         />
         {TaskList}
       </div>
