@@ -19,6 +19,9 @@ export default function Home() {
   // TASK FILTERS
   const [labelFilter, setLabelFilter] = useState<string>("");
   const [hideCompleteTasks, setHideCompleteTasks] = useState(true);
+  const [sortByFilter, setSortByFilter] = useState<"custom" | "duedate">(
+    "custom"
+  );
   // ---------------------------
 
   // SETS RANDOM CATCH PHRASE
@@ -62,7 +65,8 @@ export default function Home() {
     return [actionMap, strippedField.join(" ").trim()];
   };
 
-  const reorderTasks = (ts: Task[]): Task[] => {
+  // Creates copy not in place
+  const reorderTasksCustom = (ts: Task[]): Task[] => {
     const newTasks = [...ts];
     newTasks.sort((a, b) => {
       if (a.order > b.order) {
@@ -77,14 +81,38 @@ export default function Home() {
     return newTasks;
   };
 
+  // Creates copy not in place
+  const reorderTasksDueDate = (ts: Task[]): Task[] => {
+    const newTasks = [...ts];
+    newTasks.sort((a, b) => {
+      if (a.dueMS > b.dueMS) {
+        return 1;
+      }
+
+      if (a.dueMS < b.dueMS) {
+        return -1;
+      }
+      return 0;
+    });
+    return newTasks;
+  };
+
   useEffect(() => {
     const fetchTasks = async () => {
       let data = await fetchTasksDB();
-      data = reorderTasks(data);
+      data = reorderTasksCustom(data);
       setTasks(data);
     };
     fetchTasks().catch(console.log);
   }, []);
+
+  useEffect(() => {
+    if (sortByFilter === "custom") {
+      setTasks(reorderTasksCustom(tasks));
+    } else if (sortByFilter === "duedate") {
+      setTasks(reorderTasksDueDate(tasks));
+    }
+  }, [sortByFilter]);
 
   const submitTask = () => {
     const [actionMap, field] = parseTask(taskField);
@@ -185,7 +213,7 @@ export default function Home() {
   const taskFilterPredicate = (task: Task) => {
     if (
       labelFilter &&
-      !task.label.toLowerCase().includes(labelFilter.toLowerCase())
+      !task.label.toLowerCase().includes(labelFilter.trim().toLowerCase())
     )
       return false;
     if (hideCompleteTasks && task.complete) return false;
@@ -215,6 +243,13 @@ export default function Home() {
     </section>
   );
 
+  // const Seperator = (
+  //   <section>
+  //     <h1 className="text-3xl">Today</h1>
+  //     <hr />
+  //   </section>
+  // );
+
   return (
     <main className="flex h-screen w-screen flex-col items-center justify-between px-2 pd-2 pt-10">
       <Navbar
@@ -232,10 +267,12 @@ export default function Home() {
           }}
         />
         <ListController
+          setSortByFilter={setSortByFilter}
           labelFilterVal={labelFilter}
           onChangeLabel={setLabelFilter}
           hideComplete={hideCompleteTasks}
           setHideComplete={setHideCompleteTasks}
+          sortBy={sortByFilter}
         />
         {TaskList}
       </div>
