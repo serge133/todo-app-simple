@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import CheckBox from "./Checkbox";
+import CheckBox from "@/components/Checkbox";
 
 type Props = {
   id: number;
@@ -16,6 +16,7 @@ type Props = {
   originalText: string;
   disableUpDownControl: boolean;
 };
+
 export default function TaskComponent(props: Props) {
   const priorities = ["bg-white", "bg-blue-500", "bg-amber-500", "bg-red-500"];
   const priorities_border = [
