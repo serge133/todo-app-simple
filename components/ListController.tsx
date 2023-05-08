@@ -6,7 +6,7 @@ type Props = {
   labelFilterVal: string;
   hideComplete: boolean;
   setHideComplete: (val: boolean) => void;
-  sortBy: "custom" | "duedate";
+  sortBy: TaskOrdering;
   reorder: (ordering: TaskOrdering) => void;
 };
 
@@ -17,8 +17,10 @@ export default function ListController(props: Props) {
     props.setHideComplete(newVal);
   };
   const toggleFilter = () => {
-    if (props.sortBy === "custom") props.reorder("duedate");
-    else props.reorder("custom");
+    const newFilter: TaskOrdering =
+      props.sortBy === "custom" ? "duedate" : "custom";
+    props.reorder(newFilter);
+    localStorage.setItem("filteringMethod", newFilter);
   };
 
   const handleLabelChange = (e: ChangeEvent<HTMLInputElement>) => {

@@ -1,6 +1,7 @@
 import TaskComponent from "@/components/Task";
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/Navbar";
 import Task from "@/models/task";
+import ListController from "@/components/ListController";
 import { useEffect, useState } from "react";
 import { randomCatchphrase } from "@/util";
 import {
@@ -10,39 +11,38 @@ import {
   saveTaskDB,
   updateTaskDB,
 } from "@/database";
-import ListController from "@/components/list_controller";
 import { TaskOrdering } from "@/types";
-// import { writeDB } from "@/database";
 
 // Creates copy not in place
-const reorderTasksCustom = (ts: Task[]): Task[] => {
-  const newTasks = [...ts];
-  newTasks.sort((a, b) => {
-    if (a.order > b.order) {
-      return 1;
-    }
+const reorder = {
+  custom: (ts: Task[]): Task[] => {
+    const newTasks = [...ts];
+    newTasks.sort((a, b) => {
+      if (a.order > b.order) {
+        return 1;
+      }
 
-    if (a.order < b.order) {
-      return -1;
-    }
-    return 0;
-  });
-  return newTasks;
-};
-// Creates copy not in place
-const reorderTasksDueDate = (ts: Task[]): Task[] => {
-  const newTasks = [...ts];
-  newTasks.sort((a, b) => {
-    if (a.dueMS > b.dueMS) {
-      return 1;
-    }
+      if (a.order < b.order) {
+        return -1;
+      }
+      return 0;
+    });
+    return newTasks;
+  },
+  duedate: (ts: Task[]): Task[] => {
+    const newTasks = [...ts];
+    newTasks.sort((a, b) => {
+      if (a.dueMS > b.dueMS) {
+        return 1;
+      }
 
-    if (a.dueMS < b.dueMS) {
-      return -1;
-    }
-    return 0;
-  });
-  return newTasks;
+      if (a.dueMS < b.dueMS) {
+        return -1;
+      }
+      return 0;
+    });
+    return newTasks;
+  },
 };
 
 export default function Home() {
@@ -67,12 +67,32 @@ export default function Home() {
     const listControllerComplete: string | null = localStorage.getItem(
       "listControllerHideComplete"
     );
+    const listFilteringMethod: string | null =
+      localStorage.getItem("filteringMethod");
+
     setHideCompleteTasks(
       listControllerComplete === "true" || !listControllerComplete
     );
+
+    let tmp: TaskOrdering = "custom";
+    if (!listFilteringMethod || listFilteringMethod === "custom") {
+      // Default
+      tmp = "custom";
+      setSortByFilter("custom");
+    } else {
+      tmp = "duedate";
+      setSortByFilter("duedate");
+    }
     // -----------------
     initializeDB();
+    const fetchTasks = async () => {
+      let data = await fetchTasksDB();
+      data = reorder[tmp](data);
+      setTasks(data);
+    };
+    fetchTasks().catch(console.log);
   }, []);
+
   const parseTask = (s: string): [Map<any, any>, string] => {
     const actionMap = new Map([
       ["due", 0],
@@ -105,19 +125,8 @@ export default function Home() {
     return [actionMap, strippedField.join(" ").trim()];
   };
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      let data = await fetchTasksDB();
-      data = reorderTasksCustom(data);
-      setTasks(data);
-    };
-    fetchTasks().catch(console.log);
-  }, []);
-
   const reorderTasks = (ordering: TaskOrdering) => {
-    if (ordering === "custom") setTasks((prev) => reorderTasksCustom(prev));
-    else if (ordering === "duedate")
-      setTasks((prev) => reorderTasksDueDate(prev));
+    setTasks((prev) => reorder[ordering](prev));
     setSortByFilter(ordering);
   };
 
@@ -227,37 +236,6 @@ export default function Home() {
     return true;
   };
 
-  const TaskList = (
-    <section className="grow overflow-y-auto pt-2">
-      {tasks.filter(taskFilterPredicate).map((t) => (
-        <TaskComponent
-          key={t.id}
-          id={t.id}
-          title={t.title}
-          priority={t.priority}
-          label={t.label}
-          due={t.due}
-          complete={t.complete}
-          toggleComplete={toggleComplete}
-          deleteTask={deleteTask}
-          moveUp={moveUp}
-          moveDown={moveDown}
-          editTask={editTask}
-          originalText={t.originalText}
-          disableUpDownControl={sortByFilter !== "custom"}
-        />
-      ))}
-      {tasks.length === 0 && <p className="italic">{catchphrase}</p>}
-    </section>
-  );
-
-  // const Seperator = (
-  //   <section>
-  //     <h1 className="text-3xl">Today</h1>
-  //     <hr />
-  //   </section>
-  // );
-
   return (
     <main className="flex h-screen w-screen flex-col items-center justify-between px-2 pd-2 pt-10">
       <Navbar
@@ -282,7 +260,27 @@ export default function Home() {
           sortBy={sortByFilter}
           reorder={reorderTasks}
         />
-        {TaskList}
+        <section className="grow overflow-y-auto pt-2">
+          {tasks.filter(taskFilterPredicate).map((t) => (
+            <TaskComponent
+              key={t.id}
+              id={t.id}
+              title={t.title}
+              priority={t.priority}
+              label={t.label}
+              due={t.due}
+              complete={t.complete}
+              toggleComplete={toggleComplete}
+              deleteTask={deleteTask}
+              moveUp={moveUp}
+              moveDown={moveDown}
+              editTask={editTask}
+              originalText={t.originalText}
+              disableUpDownControl={sortByFilter !== "custom"}
+            />
+          ))}
+          {tasks.length === 0 && <p className="italic">{catchphrase}</p>}
+        </section>
       </div>
     </main>
   );
