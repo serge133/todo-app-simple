@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import CheckBox from "@/components/Checkbox";
+import CheckBox from "./checkbox";
 
 type Props = {
   id: number;
