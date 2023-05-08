@@ -1,7 +1,7 @@
 import TaskComponent from "@/components/Task";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/navbar";
 import Task from "@/models/task";
-import ListController from "@/components/ListController";
+import ListController from "@/components/list_controller";
 import { useEffect, useState } from "react";
 import { randomCatchphrase } from "@/util";
 import {
