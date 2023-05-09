@@ -105,7 +105,7 @@ export default function Home() {
     const strippedField: string[] = [];
 
     for (let i = 0; i < taskFieldList.length; i++) {
-      const word: string = taskFieldList[i];
+      const word: string = taskFieldList[i].toLowerCase();
       // @ts-ignore
       if (!actionMap.has(word)) {
         strippedField.push(word);
