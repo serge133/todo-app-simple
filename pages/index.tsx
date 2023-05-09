@@ -152,7 +152,7 @@ export default function Home() {
     }
 
     saveTaskDB(newTask);
-    setTasks([...tasks, newTask]);
+    setTasks(reorder[sortByFilter]([...tasks, newTask]));
     setTaskField("");
     console.log("Submitting task!!!!");
   };
