@@ -1,4 +1,7 @@
-import { openDB, deleteDB, wrap, unwrap, IDBPDatabase } from "idb";
+import {
+  openDB,
+  // deleteDB, wrap, unwrap, IDBPDatabase
+} from "idb";
 import Task from "@/models/task";
 
 // INITIALIZES DATABASE FOR COMPUTER

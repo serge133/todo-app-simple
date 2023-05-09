@@ -61,7 +61,7 @@ export default class Task {
       }
 
       let temp: Date;
-      switch (unit) {
+      switch (unit.trim().toLowerCase()) {
         case "w":
         case "week":
         case "weeks":
@@ -97,8 +97,14 @@ export default class Task {
           return;
       }
     }
-    let temp: Date;
-    switch (due) {
+    let temp: Date, distance: number;
+
+    const getFutureWeekday = (currday: number, futureday: number): number => {
+      for (let i = 0; i < 7; i++) if ((currday + i) % 7 === futureday) return i;
+      return -1;
+    };
+
+    switch (due.toLowerCase()) {
       case "now":
         temp = new Date();
         this.dueMS = +temp;
@@ -112,11 +118,61 @@ export default class Task {
         break;
 
       case "tonight":
-        temp = new Date(new Date().setHours(23, 59, 0, 0));
+        temp = new Date(new Date().setHours(23, 59, 59, 0));
         this.dueMS = +temp;
         this.due = temp.toLocaleString();
         break;
 
+      case "mon":
+      case "monday":
+        distance = getFutureWeekday(new Date().getDay(), 1);
+        temp = new Date(future(0, distance, 0, 0).setHours(23, 59, 59, 0));
+        this.dueMS = +temp;
+        this.due = temp.toLocaleString();
+        break;
+      case "tue":
+      case "tuesday":
+        distance = getFutureWeekday(new Date().getDay(), 2);
+        temp = new Date(future(0, distance, 0, 0).setHours(23, 59, 59, 0));
+        this.dueMS = +temp;
+        this.due = temp.toLocaleString();
+        break;
+      case "wed":
+      case "wednesday":
+        distance = getFutureWeekday(new Date().getDay(), 3);
+        temp = new Date(future(0, distance, 0, 0).setHours(23, 59, 59, 0));
+        this.dueMS = +temp;
+        this.due = temp.toLocaleString();
+        break;
+      case "thu":
+      case "thur":
+      case "thursday":
+        distance = getFutureWeekday(new Date().getDay(), 4);
+        temp = new Date(future(0, distance, 0, 0).setHours(23, 59, 59, 0));
+        this.dueMS = +temp;
+        this.due = temp.toLocaleString();
+        break;
+      case "fri":
+      case "friday":
+        distance = getFutureWeekday(new Date().getDay(), 5);
+        temp = new Date(future(0, distance, 0, 0).setHours(23, 59, 59, 0));
+        this.dueMS = +temp;
+        this.due = temp.toLocaleString();
+        break;
+      case "sat":
+      case "saturday":
+        distance = getFutureWeekday(new Date().getDay(), 6);
+        temp = new Date(future(0, distance, 0, 0).setHours(23, 59, 59, 0));
+        this.dueMS = +temp;
+        this.due = temp.toLocaleString();
+        break;
+      case "sun":
+      case "sunday":
+        distance = getFutureWeekday(new Date().getDay(), 0);
+        temp = new Date(future(0, distance, 0, 0).setHours(23, 59, 59, 0));
+        this.dueMS = +temp;
+        this.due = temp.toLocaleString();
+        break;
       // Happens when invalid date was supplied
       default:
         this._valid = false;
