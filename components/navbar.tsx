@@ -8,7 +8,6 @@ export default function Navbar(props: Props) {
   const items = [
     { name: "HOME", url: "/" },
     { name: "ARCHIVE", url: "/archive" },
-    { name: "DEMO", url: "/demo" },
   ];
 
   return (

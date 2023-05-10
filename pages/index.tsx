@@ -1,9 +1,9 @@
 import TaskComponent from "@/components/task-component";
 import Navbar from "@/components/navbar";
-import Task, { parseTaskString } from "@/models/task";
+import Task from "@/models/task";
 import ListController from "@/components/list-controller";
 import { useEffect, useState } from "react";
-import { randomCatchphrase } from "@/util";
+import { randomCatchphrase } from "@/functions/util";
 import {
   deleteTaskDB,
   fetchTasksDB,
@@ -12,6 +12,7 @@ import {
   updateTaskDB,
 } from "@/database";
 import { TaskOrdering } from "@/types";
+import parseTaskString from "@/functions/parse-task-string";
 
 // Creates copy not in place
 const reorder = {
@@ -101,6 +102,7 @@ export default function Home() {
   const submitTask = () => {
     const newTask = parseTaskString(taskField, tasks.length);
     if (!newTask) return;
+    // If there is a new task but parsing the task field failed
     if (!newTask.isValidTask()) {
       console.log(newTask.getStatusMsg());
       return;
