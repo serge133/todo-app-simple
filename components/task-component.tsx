@@ -18,10 +18,10 @@ type Props = {
 };
 
 export default function TaskComponent(props: Props) {
-  const priorities = ["bg-white", "bg-blue-500", "bg-amber-500", "bg-red-500"];
+  const priorities = ["bg-white", "bg-green-500", "bg-amber-500", "bg-red-500"];
   const priorities_border = [
     "border-white",
-    "border-blue-500",
+    "border-green-500",
     "border-amber-500",
     "border-red-800",
   ];
