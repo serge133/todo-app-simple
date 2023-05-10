@@ -1,6 +1,6 @@
 import TaskComponent from "@/components/task-component";
 import Navbar from "@/components/navbar";
-import Task from "@/models/task";
+import Task, { parseTaskString } from "@/models/task";
 import ListController from "@/components/list-controller";
 import { useEffect, useState } from "react";
 import { randomCatchphrase } from "@/util";
@@ -93,59 +93,14 @@ export default function Home() {
     fetchTasks().catch(console.log);
   }, []);
 
-  const parseTask = (s: string): [Map<any, any>, string] => {
-    const actionMap = new Map([
-      ["due", 0],
-      ["priority", 0],
-      ["pr", 0],
-      ["label", 0],
-      ["lb", 0],
-    ] as const);
-    const taskFieldList = s.trim().split(" ");
-    const strippedField: string[] = [];
-
-    for (let i = 0; i < taskFieldList.length; i++) {
-      const word: string = taskFieldList[i].toLowerCase();
-      // @ts-ignore
-      if (!actionMap.has(word)) {
-        strippedField.push(word);
-        continue;
-      }
-      if (i === taskFieldList.length - 1) {
-        // @ts-ignore
-        actionMap.set(word, "null");
-        continue;
-      }
-      const action = taskFieldList[i + 1];
-      // @ts-ignore
-      actionMap.set(word, action);
-      i += 1;
-    }
-
-    return [actionMap, strippedField.join(" ").trim()];
-  };
-
   const reorderTasks = (ordering: TaskOrdering) => {
     setTasks((prev) => reorder[ordering](prev));
     setSortByFilter(ordering);
   };
 
   const submitTask = () => {
-    const [actionMap, field] = parseTask(taskField);
-
-    if (!field) {
-      console.log("Field is empty");
-      return;
-    }
-    const newTask = new Task(
-      field,
-      actionMap.get("priority") || actionMap.get("pr"),
-      actionMap.get("due"),
-      actionMap.get("label") || actionMap.get("lb"),
-      tasks.length,
-      taskField
-    );
-
+    const newTask = parseTaskString(taskField, tasks.length);
+    if (!newTask) return;
     if (!newTask.isValidTask()) {
       console.log(newTask.getStatusMsg());
       return;
@@ -154,7 +109,6 @@ export default function Home() {
     saveTaskDB(newTask);
     setTasks(reorder[sortByFilter]([...tasks, newTask]));
     setTaskField("");
-    console.log("Submitting task!!!!");
   };
 
   const toggleComplete = (taskId: number) => {
