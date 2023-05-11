@@ -4,12 +4,18 @@ import {
 } from "idb";
 import Task from "@/models/task";
 
+const VERSION: number = 2;
+
 // INITIALIZES DATABASE FOR COMPUTER
 export function initializeDB() {
-  openDB("task-db", 1, {
+  openDB("task-db", VERSION, {
     upgrade(db) {
-      db.createObjectStore("task", { keyPath: "id" });
-      db.createObjectStore("archived-task", { keyPath: "id" });
+      if (!db.objectStoreNames.contains("task")) {
+        db.createObjectStore("task", { keyPath: "id" });
+      }
+      if (!db.objectStoreNames.contains("archived-task")) {
+        db.createObjectStore("archived-task", { keyPath: "id" });
+      }
     },
   });
   // openDB("archive-db", 1, {
@@ -20,12 +26,12 @@ export function initializeDB() {
 }
 
 export async function deleteTaskDB(taskID: number) {
-  const db1 = await openDB("task-db", 1);
+  const db1 = await openDB("task-db", VERSION);
   db1.delete("task", taskID).then(console.log).catch(console.log);
   db1.close();
 }
 export async function updateTaskDB(task: Task) {
-  const db1 = await openDB("task-db", 1);
+  const db1 = await openDB("task-db", VERSION);
   db1
     .put("task", task)
     .then((res) => console.log(res))
@@ -34,14 +40,14 @@ export async function updateTaskDB(task: Task) {
 }
 
 export async function fetchTasksDB(): Promise<Task[]> {
-  const db1 = await openDB("task-db", 1);
+  const db1 = await openDB("task-db", VERSION);
   const tasks = await db1.getAll("task");
   db1.close();
   return tasks;
 }
 
 export async function saveTaskDB(newTask: Task) {
-  const db1 = await openDB("task-db", 1);
+  const db1 = await openDB("task-db", VERSION);
   db1
     .add("task", newTask)
     .then((result) => console.log("Success!", result))
@@ -52,7 +58,7 @@ export async function saveTaskDB(newTask: Task) {
 
 // Creates a new task in the archive that is it
 export async function archiveTaskDB(newTask: Task) {
-  const archiveDB = await openDB("task-db", 1);
+  const archiveDB = await openDB("task-db", VERSION);
   console.log("YO");
   archiveDB
     .put("archived-task", newTask)
@@ -62,7 +68,7 @@ export async function archiveTaskDB(newTask: Task) {
 }
 
 export async function fetchArchivedTasks(): Promise<Task[]> {
-  const db1 = await openDB("task-db", 1);
+  const db1 = await openDB("task-db", VERSION);
   const archivedTasks = await db1.getAll("archived-task");
   db1.close();
   return archivedTasks;
