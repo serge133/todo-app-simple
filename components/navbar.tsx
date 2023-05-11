@@ -12,7 +12,7 @@ export default function Navbar(props: Props) {
   ];
 
   return (
-    <div className="absolute top-0 left-0 w-full py-2">
+    <div className="fixed bg-slate-800 z-50 top-0 left-0 w-full py-2">
       {items.map((l) => (
         <div key={l.name} className="ml-5 inline">
           <Link
@@ -28,7 +28,7 @@ export default function Navbar(props: Props) {
       ))}
       {props.numTasks ? (
         <h3 className="italic inline ml-5">
-          <span className="text-red-500">{props.numTasks}</span> task(s) due
+          <span className="text-red-500">{props.numTasks}</span> task(s)
         </h3>
       ) : (
         <h3 className="italic inline ml-5">No Tasks</h3>

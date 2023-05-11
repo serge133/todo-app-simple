@@ -14,8 +14,8 @@ export default function HowToUsePage() {
   return (
     <main className="h-screen w-screen">
       <Navbar currPage="HOW TO USE" />
-      <div className="w-full h-full pt-10 p-2">
-        <div className="shaded bg-slate-900 grow w-full h-full rounded-lg px-5 overflow-y-auto">
+      <div className="w-full pt-12 p-2">
+        <div className="bg-slate-900 grow w-full rounded-lg p-2">
           <Seperator>Task Creation</Seperator>
           <TaskField
             className="w-full"
@@ -232,7 +232,7 @@ export default function HowToUsePage() {
           <p className="text-slate-400 my-2">
             Overdue tasks that are not completed will have an{" "}
             <span className="text-red-500">(Overdue)</span> badge next to the
-            due date to remind you that it is past its due date
+            due date to remind you that it is past its due date.
           </p>
         </div>
       </div>

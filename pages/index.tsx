@@ -255,12 +255,12 @@ export default function Home() {
     </div>
   );
   return (
-    <main className="flex h-screen w-screen flex-col items-center justify-between px-2 pd-2 pt-10">
+    <main className="flex h-screen w-screen flex-col items-center justify-between px-2 pd-2 pt-12">
       <Navbar
         currPage="HOME"
         numTasks={tasks.filter((x) => !x.complete).length}
       />
-      <div className="flex flex-col p-2 w-full h-full border-slate-500 bg-black rounded-lg border overflow-hidden">
+      <div className="flex flex-col px-2 pt-2 w-full border-slate-500 bg-black rounded-lg border">
         <TaskField
           setValue={setTaskField}
           value={taskField}
@@ -275,7 +275,7 @@ export default function Home() {
           sortBy={sortByFilter}
           reorder={reorderTasks}
         />
-        <section className="grow overflow-y-auto pt-2">
+        <section className="grow pt-2">
           {tasks.filter(taskFilterPredicate).map((t) => {
             const disableUpDownControl = sortByFilter !== "custom";
             const handleEdit = () => editTask(t.id, t.originalText);
