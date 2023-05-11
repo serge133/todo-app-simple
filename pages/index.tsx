@@ -245,7 +245,7 @@ export default function Home() {
               priority={t.priority}
               label={t.label}
               due={t.due}
-              overdue={todayMS > t.dueMS}
+              overdue={!t.complete && todayMS > t.dueMS}
               complete={t.complete}
               toggleComplete={toggleComplete}
               deleteTask={deleteTask}
