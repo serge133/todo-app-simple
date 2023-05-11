@@ -5,6 +5,7 @@ import ListController from "@/components/list-controller";
 import { useEffect, useState } from "react";
 import { randomCatchphrase } from "@/functions/util";
 import {
+  archiveTaskDB,
   deleteTaskDB,
   fetchTasksDB,
   initializeDB,
@@ -13,6 +14,7 @@ import {
 } from "@/database";
 import { TaskOrdering } from "@/types";
 import parseTaskString from "@/functions/parse-task-string";
+import TaskField from "@/components/task-field";
 
 // Creates copy not in place
 const reorder = {
@@ -63,6 +65,19 @@ export default function Home() {
   );
   // -----------------------------------------------
 
+  const deleteTask = (taskId: number) => {
+    const newTasks = tasks.filter((t) => {
+      if (t.id === taskId) return;
+      return t;
+    });
+
+    const thisTask = tasks.find((t) => t.id === taskId);
+    if (!thisTask) return;
+    archiveTaskDB(thisTask);
+    deleteTaskDB(taskId);
+    setTasks(newTasks);
+  };
+
   useEffect(() => {
     // set defaults on list controller
     const listControllerComplete: string | null = localStorage.getItem(
@@ -86,8 +101,18 @@ export default function Home() {
     }
     // -----------------
     initializeDB();
+
+    // ? CLEAN UP
+    // tasks 1 day past the due date are archived and deleted
+    const expireMS: number = +new Date() - 86400000;
     const fetchTasks = async () => {
-      let data = await fetchTasksDB();
+      let data = (await fetchTasksDB()).filter((t) => {
+        if (expireMS > t.dueMS) {
+          archiveTaskDB(t).then(() => deleteTaskDB(t.id));
+          return false;
+        }
+        return true;
+      });
       data = reorder[tmp](data);
       setTasks(data);
     };
@@ -122,16 +147,6 @@ export default function Home() {
       return t;
     });
 
-    setTasks(newTasks);
-  };
-
-  const deleteTask = (taskId: number) => {
-    const newTasks = tasks.filter((t) => {
-      if (t.id === taskId) return;
-      return t;
-    });
-
-    deleteTaskDB(taskId);
     setTasks(newTasks);
   };
 
@@ -199,14 +214,18 @@ export default function Home() {
         numTasks={tasks.filter((x) => !x.complete).length}
       />
       <div className="flex flex-col p-2 w-full h-full border-white bg-black rounded-lg border overflow-hidden">
-        <input
-          className="rounded-lg bg-inherit border px-5 py-2.5 focus:outline-none"
+        {/* <input className="rounded-lg bg-inherit border px-5 py-2.5 focus:outline-none"
           placeholder="Workout due +4days priority 3 label sports"
           onChange={(e) => setTaskField(e.target.value)}
           value={taskField}
           onKeyDown={(e) => {
             if (e.key === "Enter") submitTask();
           }}
+        /> */}
+        <TaskField
+          setValue={setTaskField}
+          value={taskField}
+          onEnter={submitTask}
         />
         <ListController
           labelFilterVal={labelFilter}

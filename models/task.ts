@@ -40,7 +40,12 @@ export default class Task {
   }
 
   private parseDueDate(due: string | 0) {
-    if (due === 0) return;
+    if (due === 0) {
+      let tonight = new Date(new Date().setHours(23, 59, 59, 0));
+      this.dueMS = +tonight;
+      this.due = tonight.toLocaleString();
+      return;
+    }
 
     if (due[0] === "+") {
       if (isNaN(+due[1])) {

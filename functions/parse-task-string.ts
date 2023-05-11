@@ -15,20 +15,20 @@ export default function parseTaskString(
   const strippedFieldList: string[] = [];
 
   for (let i = 0; i < taskFieldList.length; i++) {
-    const word: string = taskFieldList[i].toLowerCase();
+    const lowerCaseWord: string = taskFieldList[i].toLowerCase();
     // @ts-ignore
-    if (!actionMap.has(word)) {
-      strippedFieldList.push(word);
+    if (!actionMap.has(lowerCaseWord)) {
+      strippedFieldList.push(taskFieldList[i]);
       continue;
     }
     if (i === taskFieldList.length - 1) {
       // @ts-ignore
-      actionMap.set(word, "null");
+      actionMap.set(lowerCaseWord, "null");
       continue;
     }
     const action = taskFieldList[i + 1];
     // @ts-ignore
-    actionMap.set(word, action);
+    actionMap.set(lowerCaseWord, action);
     i += 1;
   }
 
