@@ -210,13 +210,13 @@ export default function Home() {
   const todayMS: number = +new Date();
   const TaskController = ({
     onEdit,
-    onDelete,
+    onArchive,
     onUp,
     onDown,
     disableUpDownControl,
   }: {
     onEdit: () => void;
-    onDelete: () => void;
+    onArchive: () => void;
     onUp: () => void;
     onDown: () => void;
     disableUpDownControl: boolean;
@@ -231,9 +231,9 @@ export default function Home() {
         </div>
         <div
           className="hover:text-red-600 cursor-pointer inline"
-          onClick={onDelete}
+          onClick={onArchive}
         >
-          DELETE
+          ARCHIVE
         </div>
       </section>
       {!disableUpDownControl && (
@@ -261,14 +261,6 @@ export default function Home() {
         numTasks={tasks.filter((x) => !x.complete).length}
       />
       <div className="flex flex-col p-2 w-full h-full border-slate-500 bg-black rounded-lg border overflow-hidden">
-        {/* <input className="rounded-lg bg-inherit border px-5 py-2.5 focus:outline-none"
-          placeholder="Workout due +4days priority 3 label sports"
-          onChange={(e) => setTaskField(e.target.value)}
-          value={taskField}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") submitTask();
-          }}
-        /> */}
         <TaskField
           setValue={setTaskField}
           value={taskField}
@@ -287,7 +279,7 @@ export default function Home() {
           {tasks.filter(taskFilterPredicate).map((t) => {
             const disableUpDownControl = sortByFilter !== "custom";
             const handleEdit = () => editTask(t.id, t.originalText);
-            const handleDelete = () => {
+            const handleArchive = () => {
               archiveTaskDB(t);
               deleteTask(t.id);
             };
@@ -313,10 +305,10 @@ export default function Home() {
                 controller={
                   <TaskController
                     onEdit={handleEdit}
-                    onDelete={handleDelete}
                     onUp={handleUP}
                     onDown={handleDown}
                     disableUpDownControl={disableUpDownControl}
+                    onArchive={handleArchive}
                   />
                 }
               />
