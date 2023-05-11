@@ -19,8 +19,8 @@ export default function ArchivePage() {
   return (
     <main className="flex h-screen w-screen flex-col items-center justify-between px-2 pd-2 pt-10">
       <Navbar currPage="ARCHIVE" />
-      <div className="flex flex-col p-2 w-full h-full border-white bg-black rounded-lg border overflow-hidden">
-        <section className="grow overflow-y-auto pt-2">
+      <div className="flex flex-col p-2 w-full h-full border-slate-500 bg-black rounded-lg border overflow-hidden">
+        <section className="grow overflow-y-auto">
           {archivedTasks.map((t) => (
             <TaskComponent
               key={t.id}

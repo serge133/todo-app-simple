@@ -214,7 +214,7 @@ export default function Home() {
         currPage="HOME"
         numTasks={tasks.filter((x) => !x.complete).length}
       />
-      <div className="flex flex-col p-2 w-full h-full border-white bg-black rounded-lg border overflow-hidden">
+      <div className="flex flex-col p-2 w-full h-full border-slate-500 bg-black rounded-lg border overflow-hidden">
         {/* <input className="rounded-lg bg-inherit border px-5 py-2.5 focus:outline-none"
           placeholder="Workout due +4days priority 3 label sports"
           onChange={(e) => setTaskField(e.target.value)}
@@ -227,6 +227,7 @@ export default function Home() {
           setValue={setTaskField}
           value={taskField}
           onEnter={submitTask}
+          placeholder="Workout due +4days priority 3 label sports"
         />
         <ListController
           labelFilterVal={labelFilter}

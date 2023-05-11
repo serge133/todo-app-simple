@@ -21,7 +21,7 @@ type Props = {
 export default function TaskComponent(props: Props) {
   const priorities = ["bg-white", "bg-green-500", "bg-amber-500", "bg-red-500"];
   const priorities_border = [
-    "border-white",
+    "border-slate-500",
     "border-green-500",
     "border-amber-500",
     "border-red-800",
@@ -33,7 +33,7 @@ export default function TaskComponent(props: Props) {
     className,
   }: {
     name?: string;
-    children: string | ReactNode;
+    children?: string | ReactNode;
     className?: string;
   }) => (
     <span className={`${className} rounded-md p-1 mr-2 text-sm`}>
@@ -57,8 +57,8 @@ export default function TaskComponent(props: Props) {
   return (
     <div
       className={[
-        "border-2 p-2 rounded-lg mb-3 relative",
-        props.complete ? "border-gray-500" : priorities_border[props.priority],
+        "border p-2 rounded-lg mb-3 relative",
+        props.complete ? "border-slate-500" : priorities_border[props.priority],
       ].join(" ")}
       key={props.id}
     >
@@ -100,9 +100,7 @@ export default function TaskComponent(props: Props) {
           {props.title}
         </p>
         <section className={props.complete ? "opacity-25" : ""}>
-          <Tag className={`${priorities[props.priority]} text-black font-bold`}>
-            ㅤㅤㅤㅤㅤㅤㅤ
-          </Tag>
+          <Tag className={priorities[props.priority]} />
           <Tag name="due" className="bg-transparent">
             {props.due}
             {props.overdue && <span className="text-red-500"> (Overdue)</span>}
