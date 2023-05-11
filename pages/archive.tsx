@@ -29,7 +29,7 @@ export default function ArchivePage() {
               priority={t.priority}
               label={t.label}
               due={t.due}
-              complete={t.complete}
+              complete={false}
               toggleComplete={() => {}}
               deleteTask={() => {}}
               moveUp={() => {}}
