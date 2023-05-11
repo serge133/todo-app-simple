@@ -15,6 +15,7 @@ type Props = {
   editTask: (taskId: number, originalText: string) => void;
   originalText: string;
   disableUpDownControl: boolean;
+  overdue: boolean;
 };
 
 export default function TaskComponent(props: Props) {
@@ -104,6 +105,7 @@ export default function TaskComponent(props: Props) {
           </Tag>
           <Tag name="due" className="bg-transparent">
             {props.due}
+            {props.overdue && <span className="text-red-500"> (Overdue)</span>}
           </Tag>
           <Tag name="label">
             <span className="text-red-500 font-bold">

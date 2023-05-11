@@ -207,6 +207,7 @@ export default function Home() {
     return true;
   };
 
+  const todayMS: number = +new Date();
   return (
     <main className="flex h-screen w-screen flex-col items-center justify-between px-2 pd-2 pt-10">
       <Navbar
@@ -244,6 +245,7 @@ export default function Home() {
               priority={t.priority}
               label={t.label}
               due={t.due}
+              overdue={todayMS > t.dueMS}
               complete={t.complete}
               toggleComplete={toggleComplete}
               deleteTask={deleteTask}
