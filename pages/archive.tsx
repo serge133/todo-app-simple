@@ -31,13 +31,7 @@ export default function ArchivePage() {
               due={t.due}
               complete={false}
               toggleComplete={() => {}}
-              deleteTask={() => {}}
-              moveUp={() => {}}
-              moveDown={() => {}}
-              editTask={() => {}}
-              originalText={t.originalText}
               overdue={false}
-              disableUpDownControl
             />
           ))}
           {archivedTasks.length === 0 && <p className="italic">Nothing here</p>}

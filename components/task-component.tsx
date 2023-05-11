@@ -9,13 +9,8 @@ type Props = {
   label: string;
   complete: boolean;
   toggleComplete: (taskId: number) => void;
-  deleteTask: (taskId: number) => void;
-  moveUp: (taskId: number) => void;
-  moveDown: (taskId: number) => void;
-  editTask: (taskId: number, originalText: string) => void;
-  originalText: string;
-  disableUpDownControl: boolean;
   overdue: boolean;
+  controller?: ReactNode;
 };
 
 export default function TaskComponent(props: Props) {
@@ -42,18 +37,7 @@ export default function TaskComponent(props: Props) {
     </span>
   );
 
-  const handleEdit = () => props.editTask(props.id, props.originalText);
   const handleComplete = () => props.toggleComplete(props.id);
-  const handleDelete = () => props.deleteTask(props.id);
-  const handleUP = () => {
-    if (props.disableUpDownControl) return;
-    props.moveUp(props.id);
-  };
-  const handleDown = () => {
-    if (props.disableUpDownControl) return;
-    props.moveDown(props.id);
-  };
-
   return (
     <div
       className={[
@@ -65,36 +49,7 @@ export default function TaskComponent(props: Props) {
       <div className="flex flex-col gap-2">
         <div className="flex flex-row gap-2">
           <CheckBox checked={props.complete} onClick={handleComplete} />
-          <section className=" absolute right-1 top-0">
-            <div
-              onClick={handleEdit}
-              className="inline mr-2 hover:text-red-500 cursor-pointer"
-            >
-              EDIT
-            </div>
-            <div
-              className="hover:text-red-600 cursor-pointer inline"
-              onClick={handleDelete}
-            >
-              DELETE
-            </div>
-          </section>
-          {!props.disableUpDownControl && (
-            <>
-              <div
-                className="hover:text-red-500 cursor-pointer"
-                onClick={handleUP}
-              >
-                UP
-              </div>
-              <div
-                className="hover:text-red-500 cursor-pointer"
-                onClick={handleDown}
-              >
-                DOWN
-              </div>
-            </>
-          )}
+          {props.controller}
         </div>
         <p className={props.complete ? "line-through text-gray-500" : ""}>
           {props.title}

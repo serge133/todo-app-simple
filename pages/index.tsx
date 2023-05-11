@@ -65,6 +65,7 @@ export default function Home() {
   );
   // -----------------------------------------------
 
+  // ! DOES NOT ARCHIVE TASK
   const deleteTask = (taskId: number) => {
     const newTasks = tasks.filter((t) => {
       if (t.id === taskId) return;
@@ -73,7 +74,6 @@ export default function Home() {
 
     const thisTask = tasks.find((t) => t.id === taskId);
     if (!thisTask) return;
-    archiveTaskDB(thisTask);
     deleteTaskDB(taskId);
     setTasks(newTasks);
   };
@@ -208,6 +208,52 @@ export default function Home() {
   };
 
   const todayMS: number = +new Date();
+  const TaskController = ({
+    onEdit,
+    onDelete,
+    onUp,
+    onDown,
+    disableUpDownControl,
+  }: {
+    onEdit: () => void;
+    onDelete: () => void;
+    onUp: () => void;
+    onDown: () => void;
+    disableUpDownControl: boolean;
+  }) => (
+    <div>
+      <section className="absolute right-1 top-0">
+        <div
+          onClick={onEdit}
+          className="inline mr-2 hover:text-red-500 cursor-pointer"
+        >
+          EDIT
+        </div>
+        <div
+          className="hover:text-red-600 cursor-pointer inline"
+          onClick={onDelete}
+        >
+          DELETE
+        </div>
+      </section>
+      {!disableUpDownControl && (
+        <>
+          <div
+            className="inline hover:text-red-500 cursor-pointer"
+            onClick={onUp}
+          >
+            UP{" "}
+          </div>
+          <div
+            className="inline hover:text-red-500 cursor-pointer"
+            onClick={onDown}
+          >
+            DOWN
+          </div>
+        </>
+      )}
+    </div>
+  );
   return (
     <main className="flex h-screen w-screen flex-col items-center justify-between px-2 pd-2 pt-10">
       <Navbar
@@ -238,25 +284,44 @@ export default function Home() {
           reorder={reorderTasks}
         />
         <section className="grow overflow-y-auto pt-2">
-          {tasks.filter(taskFilterPredicate).map((t) => (
-            <TaskComponent
-              key={t.id}
-              id={t.id}
-              title={t.title}
-              priority={t.priority}
-              label={t.label}
-              due={t.due}
-              overdue={!t.complete && todayMS > t.dueMS}
-              complete={t.complete}
-              toggleComplete={toggleComplete}
-              deleteTask={deleteTask}
-              moveUp={moveUp}
-              moveDown={moveDown}
-              editTask={editTask}
-              originalText={t.originalText}
-              disableUpDownControl={sortByFilter !== "custom"}
-            />
-          ))}
+          {tasks.filter(taskFilterPredicate).map((t) => {
+            const disableUpDownControl = sortByFilter !== "custom";
+            const handleEdit = () => editTask(t.id, t.originalText);
+            const handleDelete = () => {
+              archiveTaskDB(t);
+              deleteTask(t.id);
+            };
+            const handleUP = () => {
+              if (disableUpDownControl) return;
+              moveUp(t.id);
+            };
+            const handleDown = () => {
+              if (disableUpDownControl) return;
+              moveDown(t.id);
+            };
+            return (
+              <TaskComponent
+                key={t.id}
+                id={t.id}
+                title={t.title}
+                priority={t.priority}
+                label={t.label}
+                due={t.due}
+                overdue={!t.complete && todayMS > t.dueMS}
+                complete={t.complete}
+                toggleComplete={toggleComplete}
+                controller={
+                  <TaskController
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    onUp={handleUP}
+                    onDown={handleDown}
+                    disableUpDownControl={disableUpDownControl}
+                  />
+                }
+              />
+            );
+          })}
           {tasks.length === 0 && <p className="italic">{catchphrase}</p>}
         </section>
       </div>
