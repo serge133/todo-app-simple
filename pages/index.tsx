@@ -254,6 +254,7 @@ export default function Home() {
       )}
     </div>
   );
+
   return (
     <main className="flex h-screen w-screen flex-col items-center justify-between px-2 pd-2 pt-12">
       <Navbar
@@ -291,6 +292,7 @@ export default function Home() {
               if (disableUpDownControl) return;
               moveDown(t.id);
             };
+            const isOverdue: boolean = !t.complete && todayMS > t.dueMS;
             return (
               <TaskComponent
                 key={t.id}
@@ -299,7 +301,10 @@ export default function Home() {
                 priority={t.priority}
                 label={t.label}
                 due={t.due}
-                overdue={!t.complete && todayMS > t.dueMS}
+                overdue={isOverdue}
+                daysTillDue={
+                  isOverdue ? 0 : Math.ceil((t.dueMS - todayMS) / 86400000)
+                }
                 complete={t.complete}
                 toggleComplete={toggleComplete}
                 controller={

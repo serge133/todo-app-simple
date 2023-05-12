@@ -36,6 +36,7 @@ export default function HowToUsePage() {
             toggleComplete={() => {}}
             overdue={false}
             complete={false}
+            daysTillDue={0}
           />
           <p className="text-slate-400 my-2">
             This is boring however, and can be done by writing on a piece of
@@ -85,6 +86,7 @@ export default function HowToUsePage() {
             toggleComplete={() => {}}
             overdue={false}
             complete={false}
+            daysTillDue={6}
           />
           <p className="text-slate-400 my-2">
             A quick note that if you submit a task without a due date it will
@@ -152,6 +154,7 @@ export default function HowToUsePage() {
             toggleComplete={() => {}}
             overdue={false}
             complete={false}
+            daysTillDue={0}
           />
           <Seperator>Task Creation with Priority</Seperator>
           <p className="text-slate-400 my-2">
@@ -201,6 +204,7 @@ export default function HowToUsePage() {
             toggleComplete={() => {}}
             overdue={false}
             complete={false}
+            daysTillDue={0}
           />
           <Seperator>Combine all three</Seperator>
           <TaskField
@@ -220,6 +224,7 @@ export default function HowToUsePage() {
             toggleComplete={() => {}}
             overdue={false}
             complete={false}
+            daysTillDue={1}
           />
           <Seperator>Archiving</Seperator>
           <p className="text-slate-400 my-2">

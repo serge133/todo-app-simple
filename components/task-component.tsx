@@ -11,6 +11,7 @@ type Props = {
   toggleComplete: (taskId: number) => void;
   overdue: boolean;
   controller?: ReactNode;
+  daysTillDue: number;
 };
 
 export default function TaskComponent(props: Props) {
@@ -22,6 +23,13 @@ export default function TaskComponent(props: Props) {
     "border-red-800",
   ];
 
+  const daysTillDueColors = [
+    "",
+    "text-red-500",
+    "text-amber-500",
+    "text-green-500",
+  ]; // 0 days, 1 day, 2 days, 3 days
+
   const Tag = ({
     name,
     children,
@@ -32,7 +40,7 @@ export default function TaskComponent(props: Props) {
     className?: string;
   }) => (
     <span className={`${className} rounded-md p-1 mr-2 text-sm`}>
-      {name && `${name}: `}
+      {name && <span>{name}: </span>}
       {children}
     </span>
   );
@@ -56,8 +64,22 @@ export default function TaskComponent(props: Props) {
         </p>
         <section className={props.complete ? "opacity-25" : ""}>
           <Tag className={priorities[props.priority]} />
-          <Tag name="due" className="bg-transparent">
+          <Tag
+            name="due"
+            className={`bg-transparent ${
+              props.daysTillDue <= 3 && props.daysTillDue > 0
+                ? daysTillDueColors[props.daysTillDue]
+                : ""
+            }`}
+          >
             {props.due}
+            {props.daysTillDue ? (
+              <span>
+                {" "}
+                ({"<"}
+                {props.daysTillDue} Days)
+              </span>
+            ) : null}
             {props.overdue && <span className="text-red-500"> (Overdue)</span>}
           </Tag>
           <Tag name="label">

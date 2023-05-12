@@ -31,6 +31,7 @@ export default function ArchivePage() {
             complete={false}
             toggleComplete={() => {}}
             overdue={false}
+            daysTillDue={0}
           />
         ))}
         {archivedTasks.length === 0 && <p className="italic">Nothing here</p>}
