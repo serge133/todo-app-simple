@@ -283,7 +283,7 @@ export default function Home() {
           {tasks.filter(taskFilterPredicate).map((t) => {
             if (t.daysTillDue === undefined) {
               return (
-                <p>
+                <p key={t.id}>
                   Could not render {t.id} because days until task was due was
                   undefined
                 </p>
