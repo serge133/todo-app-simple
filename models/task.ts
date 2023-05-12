@@ -1,4 +1,4 @@
-import { future } from "@/functions/util";
+import { calcDaysTillDue, future } from "@/functions/util";
 
 export default class Task {
   id: number;
@@ -10,6 +10,7 @@ export default class Task {
   complete: boolean = false;
   order: number;
   originalText: string;
+  daysTillDue?: number;
 
   private _valid: boolean = true;
   private _statusMsg: string = "";

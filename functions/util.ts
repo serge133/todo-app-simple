@@ -27,3 +27,8 @@ export function randomCatchphrase(): string {
   const randIndex = Math.floor(Math.random() * phrases.length);
   return phrases[randIndex];
 }
+
+export function calcDaysTillDue(dueMS: number): number {
+  const todayMS: number = +new Date();
+  return Math.ceil((dueMS - todayMS) / 86400000);
+}

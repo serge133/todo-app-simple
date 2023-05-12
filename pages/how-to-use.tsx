@@ -31,12 +31,12 @@ export default function HowToUsePage() {
             id={0}
             priority={0}
             label="none"
-            due="5/13/2023, 2:08:32 PM"
+            due="5/11/2023, 11:59:59 PM"
             title="My First Task"
             toggleComplete={() => {}}
             overdue={false}
             complete={false}
-            daysTillDue={0}
+            daysTillDue={1}
           />
           <p className="text-slate-400 my-2">
             This is boring however, and can be done by writing on a piece of
@@ -90,9 +90,46 @@ export default function HowToUsePage() {
           />
           <p className="text-slate-400 my-2">
             A quick note that if you submit a task without a due date it will
-            automatically assume that it is due tonight.
+            automatically assume that it is due tonight. The due dates change
+            color based on how many days are left until the task is due. If
+            there is less than one day left the color of the due tag will be
+            red. If two then amber, if three then green. After three it is just
+            white.
           </p>
 
+          <TaskComponent
+            id={0}
+            priority={0}
+            label="none"
+            due="5/13/2023, 11:59:59 PM"
+            title="This is due in less than one day"
+            toggleComplete={() => {}}
+            overdue={false}
+            complete={false}
+            daysTillDue={1}
+          />
+          <TaskComponent
+            id={0}
+            priority={0}
+            label="none"
+            due="5/14/2023, 11:59:59 PM"
+            title="This is due in less than two days "
+            toggleComplete={() => {}}
+            overdue={false}
+            complete={false}
+            daysTillDue={2}
+          />
+          <TaskComponent
+            id={0}
+            priority={0}
+            label="none"
+            due="5/15/2023, 11:59:59 PM"
+            title="This is due in less than three days"
+            toggleComplete={() => {}}
+            overdue={false}
+            complete={false}
+            daysTillDue={3}
+          />
           <Seperator>Dynamic Due Dates</Seperator>
           <p className="text-slate-400 my-2">
             You can also have your task due two hours from now: due +2h/due
@@ -154,7 +191,7 @@ export default function HowToUsePage() {
             toggleComplete={() => {}}
             overdue={false}
             complete={false}
-            daysTillDue={0}
+            daysTillDue={1}
           />
           <Seperator>Task Creation with Priority</Seperator>
           <p className="text-slate-400 my-2">
@@ -204,7 +241,7 @@ export default function HowToUsePage() {
             toggleComplete={() => {}}
             overdue={false}
             complete={false}
-            daysTillDue={0}
+            daysTillDue={1}
           />
           <Seperator>Combine all three</Seperator>
           <TaskField

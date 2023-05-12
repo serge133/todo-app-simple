@@ -3,7 +3,7 @@ import Navbar from "@/components/navbar";
 import Task from "@/models/task";
 import ListController from "@/components/list-controller";
 import { useEffect, useState } from "react";
-import { randomCatchphrase } from "@/functions/util";
+import { calcDaysTillDue, randomCatchphrase } from "@/functions/util";
 import {
   archiveTaskDB,
   deleteTaskDB,
@@ -102,17 +102,20 @@ export default function Home() {
     // -----------------
     initializeDB();
 
-    // ? CLEAN UP
     // tasks that are completed and 1 day past the due date are archived
     const expireMS: number = +new Date() - 86400000;
     const fetchTasks = async () => {
       let data = (await fetchTasksDB()).filter((t) => {
+        // ? CLEAN UP
         if (t.complete && expireMS > t.dueMS) {
           archiveTaskDB(t).then(() => deleteTaskDB(t.id));
           return false;
         }
         return true;
       });
+
+      // each task comes with its own how many days till its due
+      data.map((t) => (t.daysTillDue = calcDaysTillDue(t.dueMS)));
       data = reorder[tmp](data);
       setTasks(data);
     };
@@ -134,6 +137,7 @@ export default function Home() {
     }
 
     saveTaskDB(newTask);
+    newTask.daysTillDue = calcDaysTillDue(newTask.dueMS);
     setTasks(reorder[sortByFilter]([...tasks, newTask]));
     setTaskField("");
   };
@@ -207,7 +211,6 @@ export default function Home() {
     return true;
   };
 
-  const todayMS: number = +new Date();
   const TaskController = ({
     onEdit,
     onArchive,
@@ -278,6 +281,14 @@ export default function Home() {
         />
         <section className="grow pt-2">
           {tasks.filter(taskFilterPredicate).map((t) => {
+            if (t.daysTillDue === undefined) {
+              return (
+                <p>
+                  Could not render {t.id} because days until task was due was
+                  undefined
+                </p>
+              );
+            }
             const disableUpDownControl = sortByFilter !== "custom";
             const handleEdit = () => editTask(t.id, t.originalText);
             const handleArchive = () => {
@@ -292,7 +303,7 @@ export default function Home() {
               if (disableUpDownControl) return;
               moveDown(t.id);
             };
-            const isOverdue: boolean = !t.complete && todayMS > t.dueMS;
+            const isOverdue: boolean = !t.complete && t.daysTillDue <= 0;
             return (
               <TaskComponent
                 key={t.id}
@@ -302,9 +313,7 @@ export default function Home() {
                 label={t.label}
                 due={t.due}
                 overdue={isOverdue}
-                daysTillDue={
-                  isOverdue ? 0 : Math.ceil((t.dueMS - todayMS) / 86400000)
-                }
+                daysTillDue={Math.max(0, t.daysTillDue)}
                 complete={t.complete}
                 toggleComplete={toggleComplete}
                 controller={
