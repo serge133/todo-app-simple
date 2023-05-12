@@ -13,7 +13,7 @@ export default function TaskField(props: Props) {
     props.setValue(e.target.value);
   return (
     <input
-      className={`rounded-lg bg-inherit border border-slate-500 px-5 py-2.5 focus:outline-none ${props.className}`}
+      className={`rounded-lg bg-inherit border border-slate-700 px-5 py-2.5 focus:outline-none ${props.className}`}
       placeholder={props.placeholder}
       onChange={handleChange}
       value={props.value}

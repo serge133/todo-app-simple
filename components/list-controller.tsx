@@ -28,7 +28,7 @@ export default function ListController(props: Props) {
   };
 
   return (
-    <section className="rounded-lg border border-slate-500 px-5 focus:outline-none mt-2 flex flex-row justify-start items-center gap-5">
+    <section className="rounded-lg border border-slate-700 px-5 focus:outline-none mt-2 flex flex-row justify-start items-center gap-5">
       <div
         onClick={toggleShowComplete}
         className="cursor-pointer rounded-lg py-2 text-sm text-white underline underline-offset-4 hover:text-red-500"

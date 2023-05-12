@@ -21,7 +21,8 @@ export function randomCatchphrase(): string {
     "Start the day strong",
     "Work harder, there's nothing here >:(",
     "PUT SOME TASKS ONTO HERE",
-    "YO",
+    '"The measure of intelligence is the ability to change" -Albert Einstein.',
+    "“Learn as if you will live forever, live like you will die tomorrow.” — Mahatma Gandhi",
   ];
 
   const randIndex = Math.floor(Math.random() * phrases.length);

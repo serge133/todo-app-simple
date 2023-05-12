@@ -17,7 +17,7 @@ type Props = {
 export default function TaskComponent(props: Props) {
   const priorities = ["bg-white", "bg-green-500", "bg-amber-500", "bg-red-500"];
   const priorities_border = [
-    "border-slate-500",
+    "border-slate-700",
     "border-green-500",
     "border-amber-500",
     "border-red-800",
@@ -50,7 +50,7 @@ export default function TaskComponent(props: Props) {
     <div
       className={[
         "border p-2 rounded-lg mb-3 relative",
-        props.complete ? "border-slate-500" : priorities_border[props.priority],
+        props.complete ? "border-slate-700" : priorities_border[props.priority],
       ].join(" ")}
       key={props.id}
     >
