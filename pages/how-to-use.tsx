@@ -265,10 +265,14 @@ export default function HowToUsePage() {
           />
           <Seperator>Archiving</Seperator>
           <p className="text-slate-400 my-2">
-            If a task&apos;s due date was a 24 hours ago and it is completed,
-            then the task will be archived automatically so that the home page
-            is not cluttered with completed tasks. If the task is not completed
-            then it will forever stay on your home page.
+            If a task is past its due date and it is completed, then the task
+            will be automatically archived so that the home page is not
+            cluttered with completed tasks. If the task is not completed then it
+            will forever stay on your home page. If the task is completed but it
+            has not past its due date yet, then it will still be accessible from
+            the home page (click show complete to see it). From the archive you
+            can either restore a task, which will regenerate the same task with
+            an updated due date or delete it permanently.
           </p>
           <Seperator>Overdue tasks</Seperator>
           <p className="text-slate-400 my-2">

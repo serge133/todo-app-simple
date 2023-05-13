@@ -103,7 +103,9 @@ export default function Home() {
     initializeDB();
 
     // tasks that are completed and 1 day past the due date are archived
-    const expireMS: number = +new Date() - 86400000;
+    // const expireMS: number = +new Date() - 86400000;
+    // Tasks that are completed and past the due date are immediately archived
+    const expireMS: number = +new Date();
     const fetchTasks = async () => {
       let data = (await fetchTasksDB()).filter((t) => {
         // ? CLEAN UP
