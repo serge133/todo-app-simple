@@ -49,7 +49,7 @@ export default function TaskComponent(props: Props) {
   return (
     <div
       className={[
-        "border p-2 rounded-lg mb-3 relative",
+        "border p-2 rounded-lg mb-2 relative",
         props.complete ? "border-slate-700" : priorities_border[props.priority],
       ].join(" ")}
       key={props.id}

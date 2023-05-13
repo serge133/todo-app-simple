@@ -292,8 +292,10 @@ export default function Home() {
             const disableUpDownControl = sortByFilter !== "custom";
             const handleEdit = () => editTask(t.id, t.originalText);
             const handleArchive = () => {
-              archiveTaskDB(t);
-              deleteTask(t.id);
+              if (confirm(`Are you sure you want to archive ${t.title}?`)) {
+                archiveTaskDB(t);
+                deleteTask(t.id);
+              }
             };
             const handleUP = () => {
               if (disableUpDownControl) return;

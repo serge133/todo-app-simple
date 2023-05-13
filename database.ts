@@ -55,7 +55,7 @@ export async function saveTaskDB(newTask: Task) {
 
   db1.close();
 }
-
+// ARCHIVE
 // Creates a new task in the archive that is it
 export async function archiveTaskDB(newTask: Task) {
   const archiveDB = await openDB("task-db", VERSION);
@@ -72,4 +72,10 @@ export async function fetchArchivedTasks(): Promise<Task[]> {
   const archivedTasks = await db1.getAll("archived-task");
   db1.close();
   return archivedTasks;
+}
+
+export async function deleteArchivedTaskDB(taskID: number) {
+  const db1 = await openDB("task-db", VERSION);
+  db1.delete("archived-task", taskID).then(console.log).catch(console.log);
+  db1.close();
 }
