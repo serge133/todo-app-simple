@@ -51,7 +51,7 @@ export default function ArchivePage() {
             return <p className="text-red italic">Failed to parse a task</p>;
           return (
             <div
-              className="border border-slate-700 rounded-lg p-2 mb-2 relative"
+              className="border border-slate-700 rounded-lg px-2 pd-2 pt-8 mb-2 relative"
               key={t.id}
             >
               <section className="absolute top-2 right-2">
