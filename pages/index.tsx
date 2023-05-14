@@ -199,7 +199,7 @@ export default function Home() {
   };
 
   const editTask = (taskId: number, originalText: string) => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo(0, 0);
     setTaskField(originalText);
     deleteTask(taskId);
   };
