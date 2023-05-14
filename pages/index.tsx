@@ -51,7 +51,6 @@ const reorder = {
 export default function Home() {
   const [taskField, setTaskField] = useState("");
   const [tasks, setTasks] = useState<Task[]>([]);
-  const taskFieldRef = useRef<HTMLTextAreaElement>(null);
   // TASK FILTERS
   const [labelFilter, setLabelFilter] = useState<string>("");
   const [hideCompleteTasks, setHideCompleteTasks] = useState(true);
@@ -200,7 +199,7 @@ export default function Home() {
   };
 
   const editTask = (taskId: number, originalText: string) => {
-    taskFieldRef.current?.focus();
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setTaskField(originalText);
     deleteTask(taskId);
   };
@@ -270,7 +269,6 @@ export default function Home() {
       />
       <div className="flex flex-col px-2 pt-2 w-full border-slate-700 bg-slate-900 rounded-lg border">
         <TaskField
-          reference={taskFieldRef}
           setValue={setTaskField}
           value={taskField}
           onEnter={submitTask}
