@@ -11,6 +11,7 @@ export default class Task {
   order: number;
   originalText: string;
   daysTillDue?: number;
+  repeat: boolean;
 
   private _valid: boolean = true;
   private _statusMsg: string = "";
@@ -21,12 +22,14 @@ export default class Task {
     due: string | 0,
     label: string | 0,
     order: number,
-    originalText: string
+    originalText: string,
+    repeat: boolean
   ) {
     this.id = +new Date();
     this.title = title;
     this.order = order;
     this.originalText = originalText;
+    this.repeat = repeat;
 
     if (!isNaN(+priority)) {
       this.priority = Math.min(+priority, 3);

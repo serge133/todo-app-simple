@@ -105,11 +105,24 @@ export default function Home() {
     // tasks that are completed and 1 day past the due date are archived
     // const expireMS: number = +new Date() - 86400000;
     // Tasks that are completed and past the due date are immediately archived
-    const expireMS: number = +new Date();
+    const todayMS: number = +new Date();
+    const newTasks: Task[] = [];
     const fetchTasks = async () => {
-      let data = (await fetchTasksDB()).filter((t) => {
+      let data: Task[] = (await fetchTasksDB()).filter((t) => {
         // ? CLEAN UP
-        if (t.complete && expireMS > t.dueMS) {
+        if (t.complete && todayMS > t.dueMS) {
+          if (t.repeat) {
+            const newTask: Task | false = parseTaskString(
+              t.originalText,
+              t.order
+            );
+            if (newTask) {
+              newTask.id = t.id;
+              newTasks.push(newTask);
+              updateTaskDB(newTask);
+              return false;
+            }
+          }
           archiveTaskDB(t).then(() => deleteTaskDB(t.id));
           return false;
         }
@@ -117,6 +130,7 @@ export default function Home() {
       });
 
       // each task comes with its own how many days till its due
+      data = data.concat(newTasks);
       data.map((t) => (t.daysTillDue = calcDaysTillDue(t.dueMS)));
       data = reorder[tmp](data);
       setTasks(data);
@@ -330,6 +344,7 @@ export default function Home() {
                     onArchive={handleArchive}
                   />
                 }
+                repeat={t.repeat}
               />
             );
           })}

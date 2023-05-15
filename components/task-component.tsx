@@ -12,6 +12,7 @@ type Props = {
   overdue: boolean;
   controller?: ReactNode;
   daysTillDue: number;
+  repeat?: boolean;
 };
 
 export default function TaskComponent(props: Props) {
@@ -87,6 +88,7 @@ export default function TaskComponent(props: Props) {
               {props.label.toString()}
             </span>
           </Tag>
+          {props.repeat && <span className=" text-purple-500">repeat</span>}
         </section>
       </div>
     </div>
