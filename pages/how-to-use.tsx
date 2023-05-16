@@ -7,7 +7,7 @@ import TaskField from "@/components/task-field";
 export default function HowToUsePage() {
   const Seperator = ({ children }: { children: string }) => (
     <div className="pt-5 mb-2">
-      <h1 className="text-xl mb-2 text-slate-300">{children}</h1>
+      <h1 className="text-xl mb-2 text-purple-300">{children}</h1>
       <hr />
     </div>
   );
@@ -192,6 +192,46 @@ export default function HowToUsePage() {
             overdue={false}
             complete={false}
             daysTillDue={1}
+          />
+          <Seperator>Repeating Task</Seperator>
+          <p className="text-slate-400 my-2">
+            Instead of restoring a task constantly from the archive, you can
+            automate this. When a task is a habit that must be due everyday you
+            can attach the repeat flag to the task. Repeat allows you to
+            reinitialize a task automatically everytime once it is completed and
+            is past due, without the repeat flag the task will go to the
+            archive. Just add the word{" "}
+            <span className="text-red-500">repeat</span> anywhere in the field.
+          </p>
+          <TaskField
+            className="w-full"
+            setValue={() => {}}
+            value="Go running repeat"
+            onEnter={() => {}}
+            placeholder="Workout due +4days priority 3 label sports"
+          />
+          <p className="text-slate-400 my-2">or</p>
+          <TaskField
+            className="w-full"
+            setValue={() => {}}
+            value="repeat Go running"
+            onEnter={() => {}}
+            placeholder="Workout due +4days priority 3 label sports"
+          />
+          <p className="text-slate-400 my-2">
+            Press Enter, and this will become a repeating task:
+          </p>
+          <TaskComponent
+            id={0}
+            priority={0}
+            label="none"
+            due="5/11/2023, 11:59:59 PM"
+            title="Go running"
+            toggleComplete={() => {}}
+            overdue={false}
+            complete={false}
+            daysTillDue={1}
+            repeat={true}
           />
           <Seperator>Task Creation with Priority</Seperator>
           <p className="text-slate-400 my-2">

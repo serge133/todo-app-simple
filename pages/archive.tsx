@@ -44,7 +44,7 @@ export default function ArchivePage() {
   return (
     <main className="flex h-screen w-screen flex-col items-center justify-between px-2 pd-2 pt-12">
       <Navbar currPage="ARCHIVE" />
-      <div className="flex flex-col px-2 pt-2 w-full border-slate-500 bg-black rounded-lg border">
+      <div className="flex flex-col px-2 pt-2 w-full border-slate-700 bg-slate-900 rounded-lg border">
         {archivedTasks.map((t) => {
           const newTask = parseTaskString(t.originalText, 0);
           if (!newTask || !newTask.isValidTask())
@@ -79,6 +79,7 @@ export default function ArchivePage() {
                 toggleComplete={() => {}}
                 overdue={false}
                 daysTillDue={0}
+                repeat={t?.repeat}
               />
             </div>
           );
