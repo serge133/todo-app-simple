@@ -11,33 +11,39 @@ import Task from "@/models/task";
 import { useEffect, useState } from "react";
 
 export default function ArchivePage() {
-  const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
     initializeDB();
     const fetchTasks = async () => {
       const tasks = await fetchArchivedTasks();
-      setArchivedTasks(tasks);
+      const parsedTasks: Task[] = [];
+      for (const task of tasks) {
+        const newTask = parseTaskString(task.originalText, 0);
+        if (newTask) {
+          newTask.id = task.id;
+          parsedTasks.push(newTask);
+        } else console.log("Something severely wrong happened");
+      }
+      setTasks(parsedTasks);
     };
     fetchTasks().catch(console.log);
   }, []);
 
   const deleteArchivedTask = (taskId: number) => {
-    const newArchivedTasks = archivedTasks.filter((t) => {
-      if (t.id === taskId) return;
-      return t;
+    const newArchivedTasks = tasks.filter((t) => {
+      if (t.id === taskId) return false;
+      return true;
     });
 
-    const thisTask = archivedTasks.find((t) => t.id === taskId);
-    if (!thisTask) return;
     deleteArchivedTaskDB(taskId);
-    setArchivedTasks(newArchivedTasks);
+    setTasks(newArchivedTasks);
   };
 
   // Will update the due date
-  const restoreArchivedTask = (originalTaskId: number, newTask: Task) => {
-    saveTaskDB(newTask)
-      .then(() => deleteArchivedTask(originalTaskId))
+  const restoreArchivedTask = (task: Task) => {
+    saveTaskDB(task)
+      .then(() => deleteArchivedTask(task.id))
       .catch((err) => console.log(err));
   };
 
@@ -45,9 +51,8 @@ export default function ArchivePage() {
     <main className="flex h-screen w-screen flex-col items-center justify-between px-2 pd-2 pt-12">
       <Navbar currPage="ARCHIVE" />
       <div className="flex flex-col px-2 pt-2 w-full border-slate-700 bg-slate-900 rounded-lg border">
-        {archivedTasks.map((t) => {
-          const newTask = parseTaskString(t.originalText, 0);
-          if (!newTask || !newTask.isValidTask())
+        {tasks.map((t) => {
+          if (!t || !t.isValidTask())
             return <p className="text-red italic">Failed to parse a task</p>;
           return (
             <div
@@ -62,7 +67,7 @@ export default function ArchivePage() {
                   DELETE
                 </div>
                 <div
-                  onClick={() => restoreArchivedTask(t.id, newTask)}
+                  onClick={() => restoreArchivedTask(t)}
                   className="hover:text-red-600 cursor-pointer inline"
                 >
                   RESTORE
@@ -71,10 +76,10 @@ export default function ArchivePage() {
               <div className="mb-2 font-bold">{t.originalText}</div>
               <TaskComponent
                 id={t.id}
-                title={newTask.title}
-                priority={newTask.priority}
-                label={newTask.label}
-                due={newTask.due}
+                title={t.title}
+                priority={t.priority}
+                label={t.label}
+                due={t.due}
                 complete={false}
                 toggleComplete={() => {}}
                 overdue={false}
@@ -84,7 +89,7 @@ export default function ArchivePage() {
             </div>
           );
         })}
-        {archivedTasks.length === 0 && <p className="italic">Nothing here</p>}
+        {tasks.length === 0 && <p className="italic">Nothing here</p>}
       </div>
     </main>
   );
