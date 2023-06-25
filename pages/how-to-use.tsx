@@ -31,12 +31,13 @@ export default function HowToUsePage() {
             id={0}
             priority={0}
             label="none"
-            due="5/11/2023, 11:59:59 PM"
+            due="none"
             title="My First Task"
             toggleComplete={() => {}}
             overdue={false}
             complete={false}
-            daysTillDue={1}
+            daysTillDue={Infinity}
+            hasDueDate={false}
           />
           <p className="text-slate-400 my-2">
             This is boring however, and can be done by writing on a piece of
@@ -87,6 +88,7 @@ export default function HowToUsePage() {
             overdue={false}
             complete={false}
             daysTillDue={6}
+            hasDueDate
           />
           <p className="text-slate-400 my-2">
             A quick note that if you submit a task without a due date it will
@@ -107,6 +109,7 @@ export default function HowToUsePage() {
             overdue={false}
             complete={false}
             daysTillDue={1}
+            hasDueDate
           />
           <TaskComponent
             id={0}
@@ -118,6 +121,7 @@ export default function HowToUsePage() {
             overdue={false}
             complete={false}
             daysTillDue={2}
+            hasDueDate
           />
           <TaskComponent
             id={0}
@@ -129,6 +133,7 @@ export default function HowToUsePage() {
             overdue={false}
             complete={false}
             daysTillDue={3}
+            hasDueDate
           />
           <Seperator>Dynamic Due Dates</Seperator>
           <p className="text-slate-400 my-2">
@@ -186,12 +191,13 @@ export default function HowToUsePage() {
             id={0}
             priority={0}
             label="school/linalg"
-            due="5/11/2023, 11:59:59 PM"
+            due="none"
             title="Math homework"
             toggleComplete={() => {}}
             overdue={false}
             complete={false}
-            daysTillDue={1}
+            daysTillDue={Infinity}
+            hasDueDate={false}
           />
           <Seperator>Repeating Task</Seperator>
           <p className="text-slate-400 my-2">
@@ -225,13 +231,14 @@ export default function HowToUsePage() {
             id={0}
             priority={0}
             label="none"
-            due="5/11/2023, 11:59:59 PM"
+            due="none"
             title="Go running"
             toggleComplete={() => {}}
             overdue={false}
             complete={false}
-            daysTillDue={1}
+            daysTillDue={Infinity}
             repeat={true}
+            hasDueDate={false}
           />
           <Seperator>Task Creation with Priority</Seperator>
           <p className="text-slate-400 my-2">
@@ -276,12 +283,13 @@ export default function HowToUsePage() {
             id={0}
             priority={3}
             label="none"
-            due="5/11/2023, 11:59:59 PM"
+            due="none"
             title="SUPER IMPORTANT TASK"
             toggleComplete={() => {}}
             overdue={false}
             complete={false}
-            daysTillDue={1}
+            daysTillDue={Infinity}
+            hasDueDate={false}
           />
           <Seperator>Combine all three</Seperator>
           <TaskField
@@ -302,6 +310,7 @@ export default function HowToUsePage() {
             overdue={false}
             complete={false}
             daysTillDue={1}
+            hasDueDate
           />
           <Seperator>Archiving</Seperator>
           <p className="text-slate-400 my-2">
@@ -320,6 +329,18 @@ export default function HowToUsePage() {
             <span className="text-red-500">(Overdue)</span> badge next to the
             due date to remind you that it is past its due date.
           </p>
+          <TaskComponent
+            id={0}
+            priority={1}
+            label="habit"
+            due="5/11/2023, 3:01:32 PM"
+            title="I task I have been procrastinating"
+            toggleComplete={() => {}}
+            overdue={true}
+            complete={false}
+            daysTillDue={0}
+            hasDueDate
+          />
         </div>
       </div>
     </main>

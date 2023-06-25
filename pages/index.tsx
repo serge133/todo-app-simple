@@ -110,7 +110,7 @@ export default function Home() {
     const fetchTasks = async () => {
       let data: Task[] = (await fetchTasksDB()).filter((t) => {
         // ? CLEAN UP
-        if (t.complete && todayMS > t.dueMS) {
+        if (t.complete && (!t.hasDueDate || todayMS > t.dueMS)) {
           if (t.repeat) {
             const newTask: Task | false = parseTaskString(
               t.originalText,
