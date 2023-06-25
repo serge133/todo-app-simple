@@ -27,15 +27,12 @@ export function initializeDB() {
 
 export async function deleteTaskDB(taskID: number) {
   const db1 = await openDB("task-db", VERSION);
-  db1.delete("task", taskID).then(console.log).catch(console.log);
+  db1.delete("task", taskID).catch((err) => console.log(err));
   db1.close();
 }
 export async function updateTaskDB(task: Task) {
   const db1 = await openDB("task-db", VERSION);
-  db1
-    .put("task", task)
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
+  db1.put("task", task).catch((err) => console.log(err));
   db1.close();
 }
 

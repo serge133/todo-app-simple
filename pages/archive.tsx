@@ -82,8 +82,9 @@ export default function ArchivePage() {
                 due={t.due}
                 complete={false}
                 toggleComplete={() => {}}
-                overdue={false}
-                daysTillDue={0}
+                overdue={t.daysTillDue <= 0}
+                daysTillDue={t.daysTillDue}
+                hasDueDate={t.hasDueDate}
                 repeat={t?.repeat}
               />
             </div>

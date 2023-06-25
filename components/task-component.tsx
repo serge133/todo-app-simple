@@ -11,6 +11,7 @@ type Props = {
   toggleComplete: (taskId: number) => void;
   overdue: boolean;
   controller?: ReactNode;
+  hasDueDate: boolean;
   daysTillDue: number;
   repeat?: boolean;
 };
@@ -74,14 +75,19 @@ export default function TaskComponent(props: Props) {
             }`}
           >
             {props.due}
-            {props.daysTillDue ? (
-              <span>
-                {" "}
-                ({"<"}
-                {props.daysTillDue} Days)
-              </span>
+            {props.hasDueDate ? (
+              <>
+                {props.overdue ? (
+                  <span className="text-red-500"> (Overdue)</span>
+                ) : (
+                  <span>
+                    {" "}
+                    ({"<"}
+                    {props.daysTillDue} Days)
+                  </span>
+                )}
+              </>
             ) : null}
-            {props.overdue && <span className="text-red-500"> (Overdue)</span>}
           </Tag>
           <Tag name="label">
             <span className="text-red-500 font-bold">

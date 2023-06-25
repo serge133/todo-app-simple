@@ -2,7 +2,7 @@ import TaskComponent from "@/components/task-component";
 import Navbar from "@/components/navbar";
 import Task from "@/models/task";
 import ListController from "@/components/list-controller";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { calcDaysTillDue, randomCatchphrase } from "@/functions/util";
 import {
   archiveTaskDB,
@@ -131,7 +131,11 @@ export default function Home() {
 
       // each task comes with its own how many days till its due
       data = data.concat(newTasks);
-      data.map((t) => (t.daysTillDue = calcDaysTillDue(t.dueMS)));
+      data.map((t) => {
+        if (t.hasDueDate) {
+          t.daysTillDue = calcDaysTillDue(t.dueMS);
+        }
+      });
       data = reorder[tmp](data);
       setTasks(data);
     };
@@ -153,7 +157,6 @@ export default function Home() {
     }
 
     saveTaskDB(newTask);
-    newTask.daysTillDue = calcDaysTillDue(newTask.dueMS);
     setTasks(reorder[sortByFilter]([...tasks, newTask]));
     setTaskField("");
   };
@@ -332,7 +335,8 @@ export default function Home() {
                 label={t.label}
                 due={t.due}
                 overdue={isOverdue}
-                daysTillDue={Math.max(0, t.daysTillDue)}
+                hasDueDate={t.hasDueDate}
+                daysTillDue={t.daysTillDue}
                 complete={t.complete}
                 toggleComplete={toggleComplete}
                 controller={

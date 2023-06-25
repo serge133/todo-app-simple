@@ -10,8 +10,9 @@ export default class Task {
   complete: boolean = false;
   order: number;
   originalText: string;
-  daysTillDue?: number;
+  daysTillDue: number = -1;
   repeat: boolean;
+  hasDueDate: boolean = false;
 
   private _valid: boolean = true;
   private _statusMsg: string = "";
@@ -40,16 +41,22 @@ export default class Task {
     }
 
     this.parseDueDate(due);
+    if (this.hasDueDate) {
+      this.daysTillDue = calcDaysTillDue(this.dueMS);
+    }
     this.label = label ? label.toString() : "none";
   }
 
   private parseDueDate(due: string | 0) {
+    // Default if user did not specify a due date, then it is 0
     if (due === 0) {
-      let tonight = new Date(new Date().setHours(23, 59, 59, 0));
-      this.dueMS = +tonight;
-      this.due = tonight.toLocaleString();
+      this.hasDueDate = false;
+      this.dueMS = Infinity;
+      this.due = "none";
+      this.daysTillDue = -1;
       return;
     }
+    this.hasDueDate = true;
 
     if (due[0] === "+") {
       if (isNaN(+due[1])) {
@@ -197,9 +204,5 @@ export default class Task {
 
   getStatusMsg(): string {
     return this._statusMsg;
-  }
-
-  toggleComplete(): void {
-    this.complete = !this.complete;
   }
 }
