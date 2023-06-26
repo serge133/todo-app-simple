@@ -48,6 +48,23 @@ export default function TaskComponent(props: Props) {
   );
 
   const handleComplete = () => props.toggleComplete(props.id);
+  const DueCounter = () => {
+    if (props.hasDueDate) {
+      if (!props.overdue) {
+        return (
+          <span>
+            {" "}
+            ({"<"}
+            {props.daysTillDue} Days)
+          </span>
+        );
+      } else {
+        return <span className="text-red-500"> (Overdue)</span>;
+      }
+    }
+    return <></>;
+  };
+
   return (
     <div
       className={[
@@ -75,19 +92,7 @@ export default function TaskComponent(props: Props) {
             }`}
           >
             {props.due}
-            {props.hasDueDate ? (
-              <>
-                {props.overdue ? (
-                  <span className="text-red-500"> (Overdue)</span>
-                ) : (
-                  <span>
-                    {" "}
-                    ({"<"}
-                    {props.daysTillDue} Days)
-                  </span>
-                )}
-              </>
-            ) : null}
+            <DueCounter />
           </Tag>
           <Tag name="label">
             <span className="text-red-500 font-bold">
